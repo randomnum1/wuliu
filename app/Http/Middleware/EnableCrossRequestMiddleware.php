@@ -1,0 +1,32 @@
+<?php
+
+namespace App\Http\Middleware;
+
+use Closure;
+
+class EnableCrossRequestMiddleware
+{
+    /**
+     * 允许跨域
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Closure  $next
+     * @return mixed
+     */
+    public function handle($request, Closure $next)
+    {
+        $response = $next($request);
+        $origin = $request->server('HTTP_ORIGIN') ? $request->server('HTTP_ORIGIN') : '';
+        $allow_origin = [
+            'http://10.102.10.33:5500',
+        ];
+        if (in_array($origin, $allow_origin)) {
+            $response->header('Access-Control-Allow-Origin', $origin);
+            $response->header('Access-Control-Allow-Headers', 'Origin, Content-Type, Cookie, X-CSRF-TOKEN, Accept, Authorization, X-XSRF-TOKEN');
+            $response->header('Access-Control-Expose-Headers', 'Authorization, authenticated');
+            $response->header('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, OPTIONS');
+            $response->header('Access-Control-Allow-Credentials', 'true');
+        }
+        return $response;
+    }
+}
