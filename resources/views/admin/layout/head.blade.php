@@ -49,5 +49,8 @@
     <script src="/admin/assets/layer/layer.js" type="text/javascript" ></script>
     <script src="/admin/assets/laydate/laydate.js" type="text/javascript"></script>
     <script src="/admin/js/dragDivResize.js" type="text/javascript"></script>
+
+    <link rel="stylesheet" href="/admin/css/mediazoom.css"/>
+    <script src="/admin/js/mediazoom.js"></script>
     <title></title>
 </head>

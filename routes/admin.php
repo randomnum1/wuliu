@@ -49,12 +49,14 @@ Route::group(['prefix' => 'admin'], function (){
 
         //商品列表
         Route::get('/goods', '\App\Admin\Controllers\GoodsController@index');
+        //商品详情
+        Route::get('/goods/{goods}', '\App\Admin\Controllers\GoodsController@show');
         //商品新增
         Route::get('/goods/create', '\App\Admin\Controllers\GoodsController@create');
         //商品新增行为
         Route::post('/goods/store', '\App\Admin\Controllers\GoodsController@store');
         //商品修改
-        Route::get('/goods/edit', '\App\Admin\Controllers\GoodsController@edit');
+        Route::get('/goods/{goods}/edit', '\App\Admin\Controllers\GoodsController@edit');
         //商品修改行为
         Route::post('/goods/update', '\App\Admin\Controllers\GoodsController@update');
         //商品上下架
@@ -63,6 +65,12 @@ Route::group(['prefix' => 'admin'], function (){
         Route::post('/goods/delete', '\App\Admin\Controllers\GoodsController@delete');
         //商品导出
         Route::get('/goods/export', '\App\Admin\Controllers\GoodsController@export');
+
+
+        //日期列表
+        Route::get('/date', '\App\Admin\Controllers\DateController@index');
+        //上班-休息
+        Route::post('/date/state', '\App\Admin\Controllers\DateController@state');
     });
 
 });

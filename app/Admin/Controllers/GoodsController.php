@@ -14,10 +14,23 @@ class GoodsController extends Controller
     public function index()
     {
         //逻辑
-        $goods = Good::get();
+        $goods = DB::table('goods')->select('goods.*','goods_sort.name as sortname')
+            ->leftJoin('goods_sort','goods.sort_id','=','goods_sort.id')
+            ->get();
+        $sorts = Sort::get();
 
         //返回
-        return view('admin.goods.index',compact('goods'));
+        return view('admin.goods.index',compact('goods','sorts'));
+    }
+
+
+    //商品详情页面
+    public function show(Good $goods)
+    {
+        $goods = DB::table('goods')->select('goods.*','goods_sort.name as sortname')
+            ->leftJoin('goods_sort','goods.sort_id','=','goods_sort.id')
+            ->get();
+        return view('admin.goods.show',compact('goods'));
     }
 
 
@@ -36,7 +49,7 @@ class GoodsController extends Controller
 
 
     //商品编辑
-    public function edit()
+    public function edit(Good $goods)
     {
         return view('admin.goods.edit');
     }
@@ -94,6 +107,13 @@ class GoodsController extends Controller
             $data = ['message' => 'ok'],
             $status = 200
         );
+    }
+
+
+    //商品导出
+    public function export()
+    {
+        return 'success';
     }
 
 }

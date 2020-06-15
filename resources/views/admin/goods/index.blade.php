@@ -7,15 +7,32 @@
         <div class="d_Confirm_Order_style">
             <div class="search_style">
                 <ul class="search_content clearfix">
-                    <li><label class="l_f">会员昵称</label><input type="text" class="text_add" id="nickname" /></li>
-                    <li><label class="l_f">关注时间</label><input class="inline laydate-icon" id="start" style="margin-left:10px;"></li>
+                    <li><label class="l_f">商品名称</label><input type="text" class="text_add" id="nickname" /></li>
+                    <li><label class="l_f">商品类别</label>
+                        <select name="" style="width:150px; margin-left: 10px;">
+                            <option>全部</option>
+                        @foreach($sorts as $sort)
+                            <option>{{$sort->name}}</option>
+                        @endforeach
+                        </select>
+                    </li>
+                    <li><label class="l_f">商品状态</label>
+                        <select name="" style="width:150px; margin-left: 10px;">
+                            <option>全部</option>
+                            <option>上架</option>
+                            <option>下架</option>
+                        </select>
+                    </li>
                     <li style="width:90px;"><button type="button" class="btn_search"><i class="icon-search"></i>查询</button></li>
                 </ul>
             </div>
             <!---->
             <div class="border clearfix">
                 <span class="l_f">
-                <a href="/admin/member/export" id="member_add" class="btn btn-warning">导出数据表格</a>
+                <a href="/admin/goods/create" id="member_add" class="btn btn-primary"><i class="icon-plus"></i>新增商品</a>
+                </span>
+                <span class="l_f">
+                <a href="/admin/goods/export" id="member_add" class="btn btn-warning">导出数据表格</a>
                 </span>
             </div>
             <!---->
@@ -40,9 +57,9 @@
                     <tr>
                         <td><label><input type="checkbox" class="ace"><span class="lbl"></span></label></td>
                         <td>{{$goods->id}}</td>
-                        <td>乃峰</td>
+                        <td>{{$goods->sortname}}</td>
                         <td>{{$goods->name}}</td>
-                        <td>{{$goods->piture}}</td>
+                        <td><img src="{{$goods->picture}}" style="height: 100px;" class="img_zoom" /></td>
                         <td>{{$goods->price}}</td>
                         <td>{{$goods->unit}}</td>
                         <td>{{$goods->number}}</td>
@@ -54,8 +71,8 @@
                             @endif
                         </td>
                         <td class="td-manage">
-                            <a title="编辑" href="/admin/goods/edit?id={{$goods->id}}" class="btn btn-xs btn-warning">编辑</a>
-                            <a title="详情" href="/admin/goods/show?id={{$goods->id}}" class="btn btn-xs btn-info">详情</a>
+                            <a title="编辑" href="/admin/goods/{{$goods->id}}/edit" class="btn btn-xs btn-warning">编辑</a>
+                            <a title="详情" href="/admin/goods/{{$goods->id}}" class="btn btn-xs btn-info">详情</a>
                             <a title="删除" onclick="member_del(this,{{$goods->id}})" class="btn btn-xs btn-danger">删除</a>
                         </td>
                     </tr>
@@ -89,6 +106,16 @@
         });
     });
 
+
+    /*商品-查找*/
+    $(".btn_search").click(function () {
+        var goodsname = $("#goodsname").val();
+        var sort = $("#sort").val();
+        var state = $("#state").val();
+        window.location.href = "/admin/goods?goodsname="+goodsname+"&sort="+sort+"&state="+state;
+    });
+
+
     /*商品上下架*/
     function member_edit(obj,id){
         if(obj.id == 0){
@@ -121,8 +148,6 @@
                     }
                 }
             });
-            //console.log($(obj));
-
         });
     }
 
@@ -146,4 +171,5 @@
             layer.msg('已删除!',{icon:1,time:1000});
         });
     }
+
 </script>
