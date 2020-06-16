@@ -55,4 +55,14 @@ class DateController extends Controller
         );
     }
 
+
+    //插入日期
+    public function add()
+    {
+        for($i=0;$i<=3650;$i++){
+            $date[$i]['date'] = date('Y-m-d',time() + $i*86400);
+            $date[$i]['note'] = "上班";
+        }
+        DB::table('dates')->insert($date);
+    }
 }

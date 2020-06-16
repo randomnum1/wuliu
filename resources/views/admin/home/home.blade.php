@@ -2,27 +2,27 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <link href="/admin/assets/css/bootstrap.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="/admin/css/style.css"/>
-    <link rel="stylesheet" href="/admin/assets/css/ace.min.css" />
-    <link rel="stylesheet" href="/admin/assets/css/font-awesome.min.css" />
-    <link href="/admin/assets/css/codemirror.css" rel="stylesheet">
+    <link href="/back/assets/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/back/css/style.css"/>
+    <link rel="stylesheet" href="/back/assets/css/ace.min.css" />
+    <link rel="stylesheet" href="/back/assets/css/font-awesome.min.css" />
+    <link href="/back/assets/css/codemirror.css" rel="stylesheet">
     <!--[if IE 7]>
-    <link rel="stylesheet" href="/admin/assets/css/font-awesome-ie7.min.css"/>
+    <link rel="stylesheet" href="/back/assets/css/font-awesome-ie7.min.css"/>
     <![endif]-->
     <!--[if lte IE 8]>
-    <link rel="stylesheet" href="/admin/assets/css/ace-ie.min.css"/>
+    <link rel="stylesheet" href="/back/assets/css/ace-ie.min.css"/>
     <![endif]-->
-    <script src="/admin/assets/js/ace-extra.min.js"></script>
+    <script src="/back/assets/js/ace-extra.min.js"></script>
     <!--[if lt IE 9]>
-    <script src="/admin/assets/js/html5shiv.js"></script>
-    <script src="/admin/assets/js/respond.min.js"></script>
+    <script src="/back/assets/js/html5shiv.js"></script>
+    <script src="/back/assets/js/respond.min.js"></script>
     <![endif]-->
     <!--[if !IE]> -->
-    <script src="/admin/assets/js/jquery.min.js"></script>
+    <script src="/back/assets/js/jquery.min.js"></script>
     <!-- <![endif]-->
-    <script src="/admin/assets/dist/echarts.js"></script>
-    <script src="/admin/assets/js/bootstrap.min.js"></script>
+    <script src="/back/assets/dist/echarts.js"></script>
+    <script src="/back/assets/js/bootstrap.min.js"></script>
 <title></title>
 </head>
 <body>
@@ -92,7 +92,7 @@
            <tr><td class="name">交易失败：</td><td class="munber"><a href="#">26</a>&nbsp;个</td></tr>
            </tbody>
           </table>
-         </div> 
+         </div>
          <div class="Order_Statistics">
           <div class="title_name">商品统计信息</div>
            <table class="table table-bordered">
@@ -105,7 +105,7 @@
 
            </tbody>
           </table>
-         </div> 
+         </div>
          <div class="Order_Statistics">
           <div class="title_name">会员登陆统计信息</div>
            <table class="table table-bordered">
@@ -116,9 +116,9 @@
            <tr><td class="name">QQ会员登陆：</td><td class="munber"><a href="#">1130</a>&nbsp;次</td></tr>
            </tbody>
           </table>
-         </div> 
+         </div>
              <!--<div class="t_Record">
-               <div id="main" style="height:300px; overflow:hidden; width:100%; overflow:auto" ></div>     
+               <div id="main" style="height:300px; overflow:hidden; width:100%; overflow:auto" ></div>
               </div> -->
          <div class="news_style">
           <div class="title_name">最新消息</div>
@@ -129,7 +129,7 @@
            <li><i class="icon-bell red"></i><a href="#">后台系统找那个是开通了。</a></li>
            <li><i class="icon-bell red"></i><a href="#">后台系统找那个是开通了。</a></li>
           </ul>
-         </div> 
+         </div>
          </div>
  <!--记录-->
  <div class="clearfix">

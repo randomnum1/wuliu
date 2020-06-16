@@ -33,7 +33,7 @@
                         <td class="td-manage">
                             <a title="编辑" onclick="member_edit({{$user->id}})" class="btn btn-xs btn-info">编辑</a>
                             <a title="重置密码" onclick="setting({{$user->id}})" class="btn btn-xs btn-danger">重置密码</a>
-                            <a title="权限" href="/admin/user/auth" class="btn btn-xs btn-info">权限</a>
+                            <a title="权限" href="/admin/user/{{$user->id}}/auth" class="btn btn-xs btn-info">权限</a>
                             <a title="删除" onclick="member_del(this,{{$user->id}})" class="btn btn-xs btn-danger">删除</a>
                         </td>
                     </tr>

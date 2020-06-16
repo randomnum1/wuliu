@@ -4,42 +4,42 @@
     <meta charset="utf-8" />
     <title>物流管理系统</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link href="/admin/assets/css/bootstrap.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="/admin/assets/css/font-awesome.min.css" />
+    <link href="/back/assets/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/back/assets/css/font-awesome.min.css" />
     <!--[if IE 7]>
-    <link rel="stylesheet" href="/admin/assets/css/font-awesome-ie7.min.css" />
+    <link rel="stylesheet" href="/back/assets/css/font-awesome-ie7.min.css" />
     <![endif]-->
-    <link rel="stylesheet" href="/admin/assets/css/ace.min.css" />
-    <link rel="stylesheet" href="/admin/assets/css/ace-rtl.min.css" />
-    <link rel="stylesheet" href="/admin/assets/css/ace-skins.min.css" />
-    <link rel="stylesheet" href="/admin/css/style.css"/>
+    <link rel="stylesheet" href="/back/assets/css/ace.min.css" />
+    <link rel="stylesheet" href="/back/assets/css/ace-rtl.min.css" />
+    <link rel="stylesheet" href="/back/assets/css/ace-skins.min.css" />
+    <link rel="stylesheet" href="/back/css/style.css"/>
     <!--[if lte IE 8]>
-    <link rel="stylesheet" href="/admin/assets/css/ace-ie.min.css" />
+    <link rel="stylesheet" href="/back/assets/css/ace-ie.min.css" />
     <![endif]-->
-    <script src="/admin/assets/js/ace-extra.min.js"></script>
+    <script src="/back/assets/js/ace-extra.min.js"></script>
     <!--[if lt IE 9]>
-    <script src="/admin/assets/js/html5shiv.js"></script>
-    <script src="/admin/assets/js/respond.min.js"></script>
+    <script src="/back/assets/js/html5shiv.js"></script>
+    <script src="/back/assets/js/respond.min.js"></script>
     <![endif]-->
     <!--[if !IE]> -->
-    <script src="/admin/js/jquery-1.9.1.min.js"></script>
+    <script src="/back/js/jquery-1.9.1.min.js"></script>
     <!-- <![endif]-->
     <!--[if IE]>
-    <script type="text/javascript">window.jQuery || document.write("<script src='/admin/assets/js/jquery-1.10.2.min.js'>"+"<"+"script>");</script>
+    <script type="text/javascript">window.jQuery || document.write("<script src='/back/assets/js/jquery-1.10.2.min.js'>"+"<"+"script>");</script>
     <![endif]-->
     <script type="text/javascript">
-        if("ontouchend" in document) document.write("<script src='/admin/assets/js/jquery.mobile.custom.min.js'>"+"<"+"script>");
+        if("ontouchend" in document) document.write("<script src='/back/assets/js/jquery.mobile.custom.min.js'>"+"<"+"script>");
     </script>
-    <script src="/admin/assets/js/bootstrap.min.js"></script>
-    <script src="/admin/assets/js/typeahead-bs2.min.js"></script>
+    <script src="/back/assets/js/bootstrap.min.js"></script>
+    <script src="/back/assets/js/typeahead-bs2.min.js"></script>
     <!--[if lte IE 8]>
-    <script src="/admin/assets/js/excanvas.min.js"></script>
+    <script src="/back/assets/js/excanvas.min.js"></script>
     <![endif]-->
-    <script src="/admin/assets/js/ace-elements.min.js"></script>
-    <script src="/admin/assets/js/ace.min.js"></script>
-    <script src="/admin/assets/layer/layer.js" type="text/javascript"></script>
-    <script src="/admin/assets/laydate/laydate.js" type="text/javascript"></script>
-    <script src="/admin/js/jquery.nicescroll.js" type="text/javascript"></script>
+    <script src="/back/assets/js/ace-elements.min.js"></script>
+    <script src="/back/assets/js/ace.min.js"></script>
+    <script src="/back/assets/layer/layer.js" type="text/javascript"></script>
+    <script src="/back/assets/laydate/laydate.js" type="text/javascript"></script>
+    <script src="/back/js/jquery.nicescroll.js" type="text/javascript"></script>
 
     <script type="text/javascript">
         $(function(){
@@ -123,9 +123,9 @@
     <div class="navbar-container" id="navbar-container">
 
         <div class="navbar-header pull-left">
-            <a href="/admin/index" class="navbar-brand">
+            <a href="/back/index" class="navbar-brand">
                 <small>
-                    <img src="/admin/images/logo1.png" width="470px">
+                    <img src="/back/images/logo1.png" width="470px">
                 </small>
             </a>
         </div>

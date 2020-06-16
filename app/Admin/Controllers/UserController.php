@@ -2,8 +2,10 @@
 
 namespace App\Admin\Controllers;
 
+use App\AdminPermission;
 use Illuminate\Http\Request;
 use \App\AdminUser;
+
 
 class UserController extends Controller
 {
@@ -11,6 +13,14 @@ class UserController extends Controller
     //管理员列表
     public function index()
     {
+//        $user = AdminUser::find(1)->permissions;
+//        $permission = \App\AdminPermission::find(1);
+//        $user->hasPermission($permission);
+
+//        $permission = \App\AdminPermission::find(1);
+//        $res = AdminUser::find(1)->permissions->contains($permission);
+//        dd($res);
+
         $user = AdminUser::get();
         return view('admin.user.index',compact('user'));
     }
@@ -95,9 +105,29 @@ class UserController extends Controller
 
 
     //管理员权限
-    public function auth()
+    public function auth(AdminUser $user)
     {
-        return view('admin.user.auth');
+        //所有权限
+        $permissions = \App\AdminPermission::all();
+        //用户的权限
+        $user_permissions = $user->permissions;
+
+        return view('admin.user.auth',compact('user','permissions','user_permissions'));
+    }
+
+
+    //权限修改
+    public function doauth()
+    {
+        //验证
+
+
+        //逻辑
+
+
+        //返回
+
+
     }
 
 

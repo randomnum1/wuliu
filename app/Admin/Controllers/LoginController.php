@@ -10,7 +10,7 @@ class LoginController extends Controller
     //登陆页面
     public function index()
     {
-        if(\Auth::check()) {
+        if(\Auth::guard("admin")->check()) {
             return redirect('/admin/index');
         }
         return view('admin.login.index');
@@ -45,7 +45,7 @@ class LoginController extends Controller
     //登出行为
     public function logout()
     {
-        \Auth::logout();
+        \Auth::guard("admin")->logout();
         return redirect('/admin/login');
     }
 

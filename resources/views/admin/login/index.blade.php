@@ -2,25 +2,25 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link href="/admin/assets/css/bootstrap.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="/admin/assets/css/font-awesome.min.css" />
+    <link href="/back/assets/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/back/assets/css/font-awesome.min.css" />
     <!--[if IE 7]>
-    <link rel="stylesheet" href="/admin/assets/css/font-awesome-ie7.min.css" />
+    <link rel="stylesheet" href="/back/assets/css/font-awesome-ie7.min.css" />
     <![endif]-->
-    <link rel="stylesheet" href="/admin/assets/css/ace.min.css" />
-    <link rel="stylesheet" href="/admin/assets/css/ace-rtl.min.css" />
-    <link rel="stylesheet" href="/admin/assets/css/ace-skins.min.css" />
-    <link rel="stylesheet" href="/admin/css/style.css"/>
+    <link rel="stylesheet" href="/back/assets/css/ace.min.css" />
+    <link rel="stylesheet" href="/back/assets/css/ace-rtl.min.css" />
+    <link rel="stylesheet" href="/back/assets/css/ace-skins.min.css" />
+    <link rel="stylesheet" href="/back/css/style.css"/>
     <!--[if lte IE 8]>
-    <link rel="stylesheet" href="/admin/assets/css/ace-ie.min.css" />
+    <link rel="stylesheet" href="/back/assets/css/ace-ie.min.css" />
     <![endif]-->
-    <script src="/admin/assets/js/ace-extra.min.js"></script>
+    <script src="/back/assets/js/ace-extra.min.js"></script>
     <!--[if lt IE 9]>
-    <script src="/admin/assets/js/html5shiv.js"></script>
-    <script src="/admin/assets/js/respond.min.js"></script>
+    <script src="/back/assets/js/html5shiv.js"></script>
+    <script src="/back/assets/js/respond.min.js"></script>
     <![endif]-->
-    <script src="/admin/js/jquery-1.9.1.min.js"></script>
-    <script src="/admin/assets/layer/layer.js" type="text/javascript"></script>
+    <script src="/back/js/jquery-1.9.1.min.js"></script>
+    <script src="/back/assets/layer/layer.js" type="text/javascript"></script>
     <title>登陆</title>
 </head>
 
@@ -31,7 +31,7 @@
 <div class="loginbody">
     <div class="login-container">
         <div class="center">
-            <img src="/admin/images/logo1.png" />
+            <img src="/back/images/logo1.png" />
         </div>
 
         <div class="space-6"></div>
@@ -45,7 +45,7 @@
                             管理员登陆
                         </h4>
 
-                        <div class="login_icon"><img src="/admin/images/login.png" /></div>
+                        <div class="login_icon"><img src="/back/images/login.png" /></div>
 
                         <form class="">
                             <fieldset>
