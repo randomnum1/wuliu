@@ -7,11 +7,27 @@ use Illuminate\Support\Facades\DB;
 use \App\Date;
 
 
-class DateController extends Controller
+class SystemController extends Controller
 {
 
+    //日志列表
+    public function log(Request $request)
+    {
+        //逻辑
+        $where = array();
+        $date = $request->get('date');
+        if(!empty($date)) {
+            $where[] = array('created_at','>=',$date);
+        }
+        $logs = DB::table('admin_logs')->where($where)->orderBy('created_at','desc')->get();
+
+        //返回
+        return view('admin.system.log',compact('logs'));
+    }
+
+
     //日期列表
-    public function index(Request $request)
+    public function date(Request $request)
     {
         //逻辑
         $where = array();       //查询条件
@@ -27,7 +43,7 @@ class DateController extends Controller
         $dates = Date::where($where)->get();
 
         //返回
-        return view('admin.date.index',compact('dates'));
+        return view('admin.system.index',compact('dates'));
     }
 
 

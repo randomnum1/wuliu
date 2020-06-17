@@ -45,7 +45,8 @@
 
     /*权限提交*/
     function save_submit() {
-        var array = [];
+        var id = "{{$user->id}}";
+        var array = new Array();
         $('input[type="checkbox"]:checked').each(function() {
             array.push($(this)[0].id);
         });
@@ -58,7 +59,7 @@
             },
             data: {
                 id:id,
-                password:newpassword
+                array:array
             },
             success: function (data) {
                 if(data){

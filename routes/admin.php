@@ -1,6 +1,12 @@
 <?php
+/*
+|--------------------------------------------------------------------------
+| 后端相关路由
+|--------------------------------------------------------------------------
+*/
 
-Route::group(['prefix' => 'admin'], function (){
+Route::group(['prefix' => 'admin','middleware' => 'log'], function (){
+
     //根目录
     Route::get('/', function(){ return redirect('/admin/login');});
     //登陆页面
@@ -17,7 +23,7 @@ Route::group(['prefix' => 'admin'], function (){
         //首页右侧
         Route::get('/home', '\App\Admin\Controllers\HomeController@home');
 
-        Route::group(['middleware' => 'can:users'], function(){
+        Route::group(['middleware' => 'can:users'],function(){
             //管理员列表
             Route::get('/user', '\App\Admin\Controllers\UserController@index');
             //管理员新增
@@ -76,14 +82,15 @@ Route::group(['prefix' => 'admin'], function (){
         });
 
         Route::group(['middleware' => 'can:system'], function(){
+            //日志列表
+            Route::get('/system/log', '\App\Admin\Controllers\SystemController@log');
             //日期列表
-            Route::get('/date', '\App\Admin\Controllers\DateController@index');
+            Route::get('/system/date', '\App\Admin\Controllers\SystemController@date');
             //上班-休息
-            Route::post('/date/state', '\App\Admin\Controllers\DateController@state');
+            Route::post('/system/date/state', '\App\Admin\Controllers\SystemController@state');
             //获取日期
-            //Route::get('/date/add', '\App\Admin\Controllers\DateController@add');
+            //Route::get('/system/date/add', '\App\Admin\Controllers\SystemController@add');
         });
-
 
     });
 

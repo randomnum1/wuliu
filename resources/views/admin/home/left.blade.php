@@ -62,8 +62,8 @@
 						@can('system')
 						<li><a href="#" class="dropdown-toggle"><i class="icon-cogs"></i><span class="menu-text"> 系统管理 </span><b class="arrow icon-angle-down"></b></a>
 							<ul class="submenu">
-								<li class="home"><a href="javascript:void(0)" name="/admin/date" title="日期设置" class="iframeurl"><i class="icon-double-angle-right"></i>日期设置</a></li>
-								<li class="home"><a href="javascript:void(0)" name="System_Logs.html" title="系统日志" class="iframeurl"><i class="icon-double-angle-right"></i>系统日志</a></li>
+								<li class="home"><a href="javascript:void(0)" name="/admin/system/date" title="日期设置" class="iframeurl"><i class="icon-double-angle-right"></i>日期设置</a></li>
+								<li class="home"><a href="javascript:void(0)" name="/admin/system/log" title="系统日志" class="iframeurl"><i class="icon-double-angle-right"></i>系统日志</a></li>
 							</ul>
 						</li>
 						@endcan

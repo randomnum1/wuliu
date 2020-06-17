@@ -64,7 +64,7 @@
     $(".btn_search").click(function () {
         var start = $("#start").val();
         var note = $("#note option:selected").val();
-        window.location.href = "/admin/date?start="+start+"&note="+note;
+        window.location.href = "/admin/system/date?start="+start+"&note="+note;
     });
 
 
@@ -77,7 +77,7 @@
         }
         layer.confirm(confirm,function(index){
             $.ajax({
-                url:"/admin/date/state",
+                url:"/admin/system/date/state",
                 type: "post",
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

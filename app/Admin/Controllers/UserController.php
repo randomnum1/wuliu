@@ -4,8 +4,8 @@ namespace App\Admin\Controllers;
 
 use App\AdminPermission;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use \App\AdminUser;
-
 
 class UserController extends Controller
 {
@@ -13,14 +13,6 @@ class UserController extends Controller
     //管理员列表
     public function index()
     {
-//        $user = AdminUser::find(1)->permissions;
-//        $permission = \App\AdminPermission::find(1);
-//        $user->hasPermission($permission);
-
-//        $permission = \App\AdminPermission::find(1);
-//        $res = AdminUser::find(1)->permissions->contains($permission);
-//        dd($res);
-
         $user = AdminUser::get();
         return view('admin.user.index',compact('user'));
     }
@@ -121,13 +113,25 @@ class UserController extends Controller
     {
         //验证
 
-
         //逻辑
+        $user_id = request('id');
+        $permission_id = request('array');
 
+        DB::table('admin_user_permissions')->where('user_id', '=', $user_id)->delete();
+
+        for($i=0;$i<count($permission_id);$i++){
+            $insert[$i]['user_id'] = $user_id;
+            $insert[$i]['permission_id'] = $permission_id[$i];
+            $insert[$i]['created_at'] = date('Y-m-d H:i:s',time());
+            $insert[$i]['updated_at'] = date('Y-m-d H:i:s',time());
+        }
+        DB::table('admin_user_permissions')->insert($insert);
 
         //返回
-
-
+        return response()->json(
+            $data = ['message' => 'ok'],
+            $status = 200
+        );
     }
 
 

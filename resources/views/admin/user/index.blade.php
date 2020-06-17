@@ -17,10 +17,10 @@
                     <thead>
                     <tr>
                         <th width="25"><label><input type="checkbox" class="ace"><span class="lbl"></span></label></th>
-                        <th width="80">ID</th>
-                        <th width="100">账户</th>
-                        <th width="100">创建时间</th>
-                        <th width="250">操作</th>
+                        <th width="50">ID</th>
+                        <th width="50">账户</th>
+                        <th width="50">创建时间</th>
+                        <th width="150">操作</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -102,20 +102,15 @@
             content:$('#add_menber_style'),
             btn:['提交','取消'],
             yes:function(index,layero){
-                var num=0;
-                var str="";
-                $(".add_menber input[type$='text']").each(function(n){
-                    if($(this).val()=="")
-                    {
-                        layer.alert(str+=""+$(this).attr("name")+"不能为空！\r\n",{
-                            title: '提示框',
-                            icon:0,
-                        });
-                        num++;
-                        return false;
-                    }
-                });
-                if(num>0){return false;}
+                name = $("#name").val();
+                password = $("#password").val()
+                if((name == "")||(password == "")){
+                    layer.alert("账户密码不能为空！\r\n",{
+                        title: '提示框',
+                        icon:0,
+                    });
+                    return false;
+                }
                 else{
                     $.ajax({
                         url: "/admin/user/create",
@@ -124,8 +119,8 @@
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
                         data: {
-                            name:$("#name").val(),
-                            password:$("#password").val()
+                            name:name,
+                            password:password
                         },
                         success: function (data) {
                             if(data){

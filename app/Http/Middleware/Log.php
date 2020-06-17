@@ -3,9 +3,10 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Illuminate\Auth\Middleware\Authenticate;
 
-class AdminUser
+use \App\Events\QueryExecuted;
+
+class Log
 {
     /**
      * Handle an incoming request.
@@ -16,9 +17,11 @@ class AdminUser
      */
     public function handle($request, Closure $next)
     {
-        if(!Auth::check()) {
-            return redirect()->route('\admin\login');
-        }
-        return $next($request);
+        $response = $next($request);
+
+        //调用事件QueryExecuted，记录日志
+        event(new QueryExecuted($request));
+        return $response;
     }
+
 }
