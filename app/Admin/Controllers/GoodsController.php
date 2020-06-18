@@ -24,27 +24,44 @@ class GoodsController extends Controller
     }
 
 
-    //商品详情页面
-    public function show(Good $goods)
+    //商品详情
+    public function show()
     {
-        $goods = DB::table('goods')->select('goods.*','goods_sort.name as sortname')
-            ->leftJoin('goods_sort','goods.sort_id','=','goods_sort.id')
-            ->get();
-        return view('admin.goods.show',compact('goods'));
+        dd(123);
+
     }
 
 
     //商品新增
     public function create()
     {
-        return view('admin.goods.create');
+        $sorts = Sort::all();
+        return view('admin.goods.create',compact('sorts'));
     }
 
 
     //商品新增行为
-    public function store()
+    public function store(Request $request)
     {
+        //验证
+        $this->validate(request(),[
+            'name' => 'required|min:1|max:20',
+            'price' => 'required|min:1|max:20',
+            'unit' => 'required|min:1|max:20',
+            'size' => 'required|min:1|max:20',
+            'number' => 'required|min:1|max:20',
+            'sort_id' => 'required|min:1|max:20',
+            'state' => 'required|min:1|max:20',
+            'detail' => 'required|min:1|max:20',
+        ]);
 
+        //逻辑
+        $picture = '';
+        $params = array_merge(request(['name', 'price','unit','size','number','sort_id','state','detail']),compact('picture'));
+        Good::create($params);
+
+        //返回
+        return redirect("/admin/goods");
     }
 
 

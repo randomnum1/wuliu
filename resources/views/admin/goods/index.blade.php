@@ -29,10 +29,10 @@
             <!---->
             <div class="border clearfix">
                 <span class="l_f">
-                <a href="/admin/goods/create" id="member_add" class="btn btn-primary"><i class="icon-plus"></i>新增商品</a>
+                <a href="/admin/goods/create" class="btn btn-primary"><i class="icon-plus"></i>新增商品</a>
                 </span>
                 <span class="l_f">
-                <a href="/admin/goods/export" id="member_add" class="btn btn-warning">导出数据表格</a>
+                <a href="/admin/goods/export" class="btn btn-warning">导出数据表格</a>
                 </span>
             </div>
             <!---->

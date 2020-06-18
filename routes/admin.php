@@ -64,7 +64,7 @@ Route::group(['prefix' => 'admin','middleware' => 'log'], function (){
             //商品列表
             Route::get('/goods', '\App\Admin\Controllers\GoodsController@index');
             //商品详情
-            Route::get('/goods/{goods}', '\App\Admin\Controllers\GoodsController@show');
+            Route::get('/goods/{goods}/show', '\App\Admin\Controllers\GoodsController@show');
             //商品新增
             Route::get('/goods/create', '\App\Admin\Controllers\GoodsController@create');
             //商品新增行为
