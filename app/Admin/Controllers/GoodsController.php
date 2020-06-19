@@ -44,7 +44,7 @@ class GoodsController extends Controller
     public function store(Request $request)
     {
         //验证
-        $this->validate(request(),[
+        $validatedData = $request->validate([
             'name' => 'required|min:1|max:20',
             'price' => 'required|min:1|max:20',
             'unit' => 'required|min:1|max:20',
@@ -55,8 +55,16 @@ class GoodsController extends Controller
             'detail' => 'required|min:1|max:20',
         ]);
 
+
         //逻辑
-        $picture = '';
+        if ($request->file('file')) {
+            $path = $request->file('file')->store('goods');
+            $picture = "/storage/" . $path;
+        }else{
+            $request->flash();
+            return back()->withErrors('请上传商品图片');
+        }
+
         $params = array_merge(request(['name', 'price','unit','size','number','sort_id','state','detail']),compact('picture'));
         Good::create($params);
 
