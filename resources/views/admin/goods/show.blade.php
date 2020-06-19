@@ -7,27 +7,27 @@
         {{csrf_field()}}
         <div class="clearfix cl">
             <label class="form-label col-2"><span style="color: red">*</span>商品名称：</label>
-            <div class="formControls col-10"><input type="text" class="input-text" value="{{old('name')}}" placeholder="" id="" name="name"></div>
+            <div class="formControls col-10"><input type="text" class="input-text" value="{{$goods->name}}" placeholder="" id="" name="name"></div>
         </div>
 
         <div class=" clearfix cl">
             <div class="Add_p_s">
                 <label class="form-label col-2"><span style="color: red">*</span>价&nbsp;&nbsp;&nbsp;&nbsp;格：</label>
-                <div class="formControls col-2"><input type="text" class="input-text" value="{{old('price')}}" placeholder="人民币1.11" id="" name="price"></div>
+                <div class="formControls col-2"><input type="text" class="input-text" value="{{$goods->price}}" placeholder="人民币1.11" id="" name="price"></div>
             </div>
             <div class="Add_p_s">
                 <label class="form-label col-2"><span style="color: red">*</span>单&nbsp;&nbsp;&nbsp;&nbsp;位：</label>
-                <div class="formControls col-2"><input type="text" class="input-text" value="{{old('unit')}}" placeholder="罐、个、件" id="" name="unit"></div>
+                <div class="formControls col-2"><input type="text" class="input-text" value="{{$goods->unit}}" placeholder="罐、个、件" id="" name="unit"></div>
             </div>
             <div class="Add_p_s">
                 <label class="form-label col-2"><span style="color: red">*</span>规&nbsp;&nbsp;&nbsp;&nbsp;格：</label>
-                <div class="formControls col-2"><input type="text" class="input-text" value="{{old('size')}}" placeholder="" id="" name="size"></div>
+                <div class="formControls col-2"><input type="text" class="input-text" value="{{$goods->size}}" placeholder="" id="" name="size"></div>
             </div>
         </div>
         <div class=" clearfix cl">
             <div class="Add_p_s">
                 <label class="form-label col-2"><span style="color: red">*</span>库&nbsp;&nbsp;&nbsp;&nbsp;存：</label>
-                <div class="formControls col-2"><input type="text" class="input-text" value="{{old('number')}}" placeholder="" id="" name="number"></div>
+                <div class="formControls col-2"><input type="text" class="input-text" value="{{$goods->number}}" placeholder="" id="" name="number"></div>
             </div>
             <div class="Add_p_s">
                 <label class="form-label col-2"><span style="color: red">*</span>商品类别：</label>
@@ -56,14 +56,13 @@
 
         <div class="clearfix cl">
             <label class="form-label col-2"><span style="color: red">*</span>商品详情：</label>
-            <div class="formControls col-10"><input type="text" class="input-text" value="{{old('detail')}}" placeholder="商品详细介绍" id="" name="detail"></div>
+            <div class="formControls col-10"><input type="text" class="input-text" value="{{$goods->detail}}" placeholder="商品详细介绍" id="" name="detail"></div>
         </div>
 
 
         <div class="clearfix cl">
-            <label class="form-label col-2"><span style="color: red">*</span>图片上传：</label>
-            <input type="file" name="picture" multiple="multiple" accept="image/*" onchange="showImg(this)">
-            <img src="" alt="" id="img" style="width: 200px;">
+            <label class="form-label col-2"><span style="color: red">*</span>照片：</label>
+            <img src="{{$goods->picture}}" style="width: 200px;">
         </div>
 
         <div class="clearfix cl">

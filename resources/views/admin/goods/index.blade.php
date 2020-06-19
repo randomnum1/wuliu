@@ -44,7 +44,7 @@
                         <th width="50">ID</th>
                         <th width="50">分类</th>
                         <th width="50">名称</th>
-                        <th width="100">照片</th>
+                        <th width="50">照片</th>
                         <th width="50">价格</th>
                         <th width="50">单位</th>
                         <th width="50">库存</th>
@@ -59,7 +59,7 @@
                         <td>{{$goods->id}}</td>
                         <td>{{$goods->sortname}}</td>
                         <td>{{$goods->name}}</td>
-                        <td><img src="{{$goods->picture}}" style="height: 100px;" class="img_zoom" /></td>
+                        <td><img src="{{$goods->picture}}" style="height: 80px;" class="img_zoom" /></td>
                         <td>{{$goods->price}}</td>
                         <td>{{$goods->unit}}</td>
                         <td>{{$goods->number}}</td>
@@ -71,8 +71,7 @@
                             @endif
                         </td>
                         <td class="td-manage">
-                            <a title="编辑" href="/admin/goods/{{$goods->id}}/edit" class="btn btn-xs btn-warning">编辑</a>
-                            <a title="详情" href="/admin/goods/{{$goods->id}}" class="btn btn-xs btn-info">详情</a>
+                            <a title="详情" href="/admin/goods/{{$goods->id}}/show" class="btn btn-xs btn-info">详情</a>
                             <a title="删除" onclick="member_del(this,{{$goods->id}})" class="btn btn-xs btn-danger">删除</a>
                         </td>
                     </tr>

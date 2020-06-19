@@ -1,7 +1,7 @@
 <?php
 
 return [
-
+    'price'                => ':attribute 只能是数字（小数后两位）',
     'unique'               => ':attribute 已存在',
     'accepted'             => ':attribute 是被接受的',
     'active_url'           => ':attribute 必须是一个合法的 URL',
@@ -98,6 +98,7 @@ return [
         'content'  => '内容',
         'identity' => '手机号/用户名',
         'title' => '标题',
+        'price' => '价格',
     ],
 
 ];

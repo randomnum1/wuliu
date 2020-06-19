@@ -16,7 +16,9 @@ class GoodsController extends Controller
         //逻辑
         $goods = DB::table('goods')->select('goods.*','goods_sort.name as sortname')
             ->leftJoin('goods_sort','goods.sort_id','=','goods_sort.id')
+            ->orderBy('goods.id','desc')
             ->get();
+
         $sorts = Sort::get();
 
         //返回
@@ -25,10 +27,12 @@ class GoodsController extends Controller
 
 
     //商品详情
-    public function show()
+    public function show(Good $goods)
     {
-        dd(123);
+        //返回
+        $sorts = Sort::get();
 
+        return view('admin.goods.show',compact('goods','sorts'));
     }
 
 
@@ -45,20 +49,21 @@ class GoodsController extends Controller
     {
         //验证
         $validatedData = $request->validate([
-            'name' => 'required|min:1|max:20',
-            'price' => 'required|min:1|max:20',
-            'unit' => 'required|min:1|max:20',
-            'size' => 'required|min:1|max:20',
-            'number' => 'required|min:1|max:20',
-            'sort_id' => 'required|min:1|max:20',
-            'state' => 'required|min:1|max:20',
+            'name' => 'required|min:1|max:10',
+            'price' => 'required|price|min:1|max:10',
+            'unit' => 'required|min:1|max:10',
+            'size' => 'required|min:1|max:10',
+            'number' => 'required|numeric|min:0|max:100000',
+            'sort_id' => 'required|numeric',
+            'state' => 'required|in:0,1',
             'detail' => 'required|min:1|max:20',
+            'picture' => 'required|image',
         ]);
 
 
         //逻辑
-        if ($request->file('file')) {
-            $path = $request->file('file')->store('goods');
+        if ($request->file('picture')) {
+            $path = $request->file('picture')->store('goods');
             $picture = "/storage/" . $path;
         }else{
             $request->flash();
@@ -73,31 +78,10 @@ class GoodsController extends Controller
     }
 
 
-    //商品编辑
-    public function edit(Good $goods)
-    {
-        return view('admin.goods.edit');
-    }
-
-
     //商品编辑行为
-    public function update()
+    public function update(Good $goods)
     {
-        //验证
-        $this->validate(request(),[
-            'name' => 'required|unique:goods_sort,name|max:255',
-        ]);
 
-        //逻辑
-        $sort = Sort::find(request('id'));
-        $sort->name = request('name');
-        $sort->save();
-
-        //返回
-        return response()->json(
-            $data = ['message' => 'ok'],
-            $status = 200
-        );
     }
 
 

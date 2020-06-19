@@ -69,8 +69,6 @@ Route::group(['prefix' => 'admin','middleware' => 'log'], function (){
             Route::get('/goods/create', '\App\Admin\Controllers\GoodsController@create');
             //商品新增行为
             Route::post('/goods/store', '\App\Admin\Controllers\GoodsController@store');
-            //商品修改
-            Route::get('/goods/{goods}/edit', '\App\Admin\Controllers\GoodsController@edit');
             //商品修改行为
             Route::post('/goods/update', '\App\Admin\Controllers\GoodsController@update');
             //商品上下架

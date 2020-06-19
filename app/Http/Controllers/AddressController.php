@@ -65,8 +65,7 @@ class AddressController extends Controller
             'phone' => 'required|min:6|max:20',
             'email' => 'required|email|max:255',
             'province' => 'required|max:255',
-            'city' => '   
-            |max:255',
+            'city' => 'present|max:255',
             'area' => 'present|max:255',
             'detail' => 'required|max:255',
             'postcode' => 'required|max:255',

@@ -54,11 +54,5 @@
     <link rel="stylesheet" href="/back/css/mediazoom.css"/>
     <script src="/back/js/mediazoom.js"></script>
 
-    <!--图片上传-->
-    <link rel="stylesheet" type="text/css" href="/back/diyUpload/css/webuploader.css">
-    <link rel="stylesheet" type="text/css" href="/back/diyUpload/css/diyUpload.css">
-    <script type="text/javascript" src="/back/diyUpload/js/diyUpload.js"></script>
-    <script type="text/javascript" src="/back/diyUpload/js/webuploader.html5only.min.js"></script>
-
     <title></title>
 </head>
