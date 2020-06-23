@@ -71,7 +71,7 @@
                             @endif
                         </td>
                         <td class="td-manage">
-                            <a title="详情" href="/admin/goods/{{$goods->id}}/show" class="btn btn-xs btn-info">详情</a>
+                            <a title="详情" href="/admin/goods/{{$goods->id}}/show" class="btn btn-xs btn-info">编辑</a>
                             <a title="删除" onclick="member_del(this,{{$goods->id}})" class="btn btn-xs btn-danger">删除</a>
                         </td>
                     </tr>

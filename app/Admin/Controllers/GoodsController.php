@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use \App\Sort;
 use \App\Good;
+use Illuminate\Support\Facades\Storage;
+use Excel;
 
 class GoodsController extends Controller
 {
@@ -79,9 +81,41 @@ class GoodsController extends Controller
 
 
     //商品编辑行为
-    public function update(Good $goods)
+    public function update(Request $request)
     {
+        //验证
+        $validatedData = $request->validate([
+            'name' => 'required|min:1|max:10',
+            'price' => 'required|price|min:1|max:10',
+            'unit' => 'required|min:1|max:10',
+            'size' => 'required|min:1|max:10',
+            'number' => 'required|numeric|min:0|max:100000',
+            'sort_id' => 'required|numeric',
+            'state' => 'required|in:0,1',
+            'detail' => 'required|min:1|max:20',
+            'picture' => 'nullable|image'
+        ]);
 
+        //逻辑
+        if ($request->file('picture')) {
+            $path = $request->file('picture')->store('goods');
+            $picture = "/storage/" . $path;
+            //删除旧图片
+            $oldPicture = DB::table('goods')->where('id',$request['id'])->value('picture');
+            Storage::delete(str_replace("/storage/goods", 'goods', $oldPicture));
+        }
+
+        $id = $request['id'];
+        $updated_at = date('Y-m-d H:i:s',time());
+        $params = array_merge(request(['name', 'price','unit','size','number','sort_id','state','detail']),compact('updated_at'));
+        if(isset($picture)){
+            $params = array_merge(request(['name', 'price','unit','size','number','sort_id','state','detail']),compact('updated_at','picture'));
+        }
+
+        DB::table('goods')->where('id',$id)->update($params);
+
+        //返回
+        return redirect("/admin/goods/$id/show");
     }
 
 
@@ -109,8 +143,10 @@ class GoodsController extends Controller
     //商品删除
     public function delete()
     {
-        Good::destroy(request('id'));
+        $oldPicture = DB::table('goods')->where('id',request('id'))->value('picture');
+        Storage::delete(str_replace("/storage/goods", 'goods', $oldPicture));
 
+        Good::destroy(request('id'));
         //返回
         return response()->json(
             $data = ['message' => 'ok'],
@@ -122,7 +158,23 @@ class GoodsController extends Controller
     //商品导出
     public function export()
     {
-        return 'success';
+        ini_set('memory_limit','500M');
+        set_time_limit(0);
+
+        //数据
+        $goods = Good::select('name','price','unit','size','detail','number','sort_id','state')->orderBy('updated_at','desc')->get()->toArray();
+
+        $cellData = [
+            ['名称','价格','单位','规格','描述','库存','分类','上下架'],
+        ];
+        $cellData = array_merge($cellData,$goods);
+
+        //导出逻辑
+        Excel::create('商品表',function($excel) use ($cellData){
+            $excel->sheet('goods', function($sheet) use ($cellData){
+                $sheet->rows($cellData);
+            });
+        })->export('xls');
     }
 
 }

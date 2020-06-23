@@ -64,28 +64,6 @@ class MemberController extends Controller
 
 
     //导出会员数据
-    public function export1()
-    {
-        ini_set('memory_limit','500M');
-        set_time_limit(0);
-
-        //数据
-        $user = User::select('nickname','score','created_at','updated_at')->orderBy('updated_at','desc')->get()->toArray();
-
-        $cellData = [
-            ['微信昵称','积分','关注时间','最后登录时间'],
-        ];
-        $cellData = array_merge($cellData,$user);
-
-        //导出逻辑
-        Excel::create('会员表',function($excel) use ($cellData){
-            $excel->sheet('user', function($sheet) use ($cellData){
-                $sheet->rows($cellData);
-            });
-        })->export('xls');
-    }
-
-    //导出会员数据
     public function export()
     {
         ini_set('memory_limit','500M');
