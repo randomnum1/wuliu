@@ -19,6 +19,8 @@
                         <th width="25"><label><input type="checkbox" class="ace"><span class="lbl"></span></label></th>
                         <th width="50">ID</th>
                         <th width="50">账户</th>
+                        <th width="50">姓名</th>
+                        <th width="50">手机</th>
                         <th width="50">创建时间</th>
                         <th width="150">操作</th>
                     </tr>
@@ -29,6 +31,8 @@
                         <td><label><input type="checkbox" class="ace"><span class="lbl"></span></label></td>
                         <td>{{$user->id}}</td>
                         <td>{{$user->name}}</td>
+                        <td>{{$user->real_name}}</td>
+                        <td>{{$user->phone}}</td>
                         <td>{{$user->created_at}}</td>
                         <td class="td-manage">
                             <a title="编辑" onclick="member_edit({{$user->id}})" class="btn btn-xs btn-info">编辑</a>
@@ -51,6 +55,8 @@
     <ul class=" page-content">
         <li><label class="label_name">账&nbsp;&nbsp;户 &nbsp;名：</label><span class="add_name"><input name="账户" id="name" type="text"  class="text_add"/></span><div class="prompt r_f"></div></li>
         <li><label class="label_name">密&nbsp;&nbsp;&nbsp;&nbsp;码：</label><span class="add_name"><input name="密码" id="password" type="text"  class="text_add"/></span><div class="prompt r_f"></div></li>
+        <li><label class="label_name">姓&nbsp;&nbsp;&nbsp;&nbsp;名：</label><span class="add_name"><input name="姓名" id="real_name" type="text"  class="text_add"/></span><div class="prompt r_f"></div></li>
+        <li><label class="label_name">手&nbsp;&nbsp;&nbsp;&nbsp;机：</label><span class="add_name"><input name="手机" id="phone" type="text"  class="text_add"/></span><div class="prompt r_f"></div></li>
     </ul>
 </div>
 
@@ -59,6 +65,8 @@
 <div class="add_menber" id="member_edit" style="display:none">
     <ul class=" page-content">
         <li><label class="label_name">账&nbsp;&nbsp;户 &nbsp;名：</label><span class="add_name"><input name="账户" id="newname" type="text"  class="text_add"/></span><div class="prompt r_f"></div></li>
+        <li><label class="label_name">姓&nbsp;&nbsp;&nbsp;&nbsp;名：</label><span class="add_name"><input name="姓名" id="newreal_name" type="text"  class="text_add"/></span><div class="prompt r_f"></div></li>
+        <li><label class="label_name">手&nbsp;&nbsp;&nbsp;&nbsp;机：</label><span class="add_name"><input name="手机" id="newphone" type="text"  class="text_add"/></span><div class="prompt r_f"></div></li>
     </ul>
 </div>
 
@@ -78,7 +86,7 @@
         var oTable1 = $('#sample-table').dataTable( {
             "bStateSave": false,    //状态保存
             "aoColumnDefs": [
-                {"orderable":false,"aTargets":[0,1,2,3,4]}    // 制定列不参与排序
+                {"orderable":false,"aTargets":[0,1,2,3,4,5,6]}    // 制定列不参与排序
             ]});
 
         $('table th input:checkbox').on('click' , function(){
@@ -103,9 +111,11 @@
             btn:['提交','取消'],
             yes:function(index,layero){
                 name = $("#name").val();
-                password = $("#password").val()
-                if((name == "")||(password == "")){
-                    layer.alert("账户密码不能为空！\r\n",{
+                password = $("#password").val();
+                real_name = $("#real_name").val();
+                phone = $("#phone").val()
+                if((name == "")||(password == "")||(real_name == "")||(phone == "")){
+                    layer.alert("不能为空！\r\n",{
                         title: '提示框',
                         icon:0,
                     });
@@ -120,7 +130,9 @@
                         },
                         data: {
                             name:name,
-                            password:password
+                            password:password,
+                            real_name:real_name,
+                            phone:phone
                         },
                         success: function (data) {
                             if(data){
@@ -159,9 +171,11 @@
             content:$('#member_edit'),
             btn:['提交','取消'],
             yes:function(index,layero){
-                newname = $("#newname").val()
+                newname = $("#newname").val();
+                newreal_name = $("#newreal_name").val();
+                newphone = $("#newphone").val();
                 if(newname == ""){
-                    layer.alert("账户不能为空！\r\n",{
+                    layer.alert("不能为空！\r\n",{
                         title: '提示框',
                         icon:0,
                     });
@@ -176,7 +190,9 @@
                         },
                         data: {
                             id:id,
-                            name:newname
+                            name:newname,
+                            real_name:newreal_name,
+                            phone:newphone,
                         },
                         success: function (data) {
                             if(data){
@@ -191,7 +207,7 @@
                             }
                         },
                         error:function (data) {
-                            layer.alert('数据格式不规范',{
+                            layer.alert('数据格式不规范或账户名称相同',{
                                 title: '提示框',
                                 icon:1,
                             },function () {
@@ -215,7 +231,7 @@
             content:$('#setting_password'),
             btn:['提交','取消'],
             yes:function(index,layero){
-                newpassword = $("#newpassword").val()
+                newpassword = $("#newpassword").val();
                 if(newpassword == ""){
                     layer.alert("密码不能为空！\r\n",{
                         title: '提示框',

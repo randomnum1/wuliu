@@ -46,6 +46,7 @@ class WechatController extends Controller
         }
 
         //渲染
+        $path = str_replace('-','/',$path);
         return redirect($path);
     }
 

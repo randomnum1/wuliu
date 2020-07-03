@@ -2,21 +2,42 @@
 
 namespace App\Http\Controllers;
 
-use DemeterChain\A;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use \App\Mail;
-use \App\Items;
+use App\Events\MessageExecuted;
 
-class TestController extends Controller
+class MailsController extends Controller
 {
 
-    public function index()
+    //首页接口
+    public function index(Request $request)
     {
-        return view('test.index');
+        //默认地址
+        $user_id = $request->session()->get('user.id');
+        $address = DB::table('addresses')->where([['user_id',$user_id],['state',1]])
+            ->select('id','country','en_name','cn_name','phone','email','province','city','area','detail','postcode')
+            ->get();
+
+        //可预约日期
+        $now = date('Y-m-d H:i:s',time());
+        $date = DB::table('dates')->select('date')->where([
+            ['note','上班'],
+            ['date','>',$now]
+        ])->take(6)->get();
+
+        //返回
+        return response()->json(
+            $data = [
+                'address' => $address,
+                'date' => $date
+            ],
+            $status = 200
+        );
     }
 
 
+    //邮寄编号生成
     public function number()
     {
         $time = date('Y-m-d',time());
@@ -34,12 +55,25 @@ class TestController extends Controller
     }
 
 
-    public function test(Request $request)
+    //邮寄物品写入
+    public function items($number,$itemsArr)
     {
-        //打印sql
-//        DB::connection()->enableQueryLog();
-//        dd(DB::getQueryLog());
+        foreach ($itemsArr as $k => $v){
+            $items[$k]['mail_number'] = $number;
+            $items[$k]['sort'] = $v['sort'];
+            $items[$k]['number'] = $v['number'];
+            $items[$k]['money'] = '';
+            $items[$k]['created_at'] = date('Y-m-d H:i:s',time());
+            $items[$k]['updated_at'] = date('Y-m-d H:i:s',time());
+        }
 
+        DB::table('items')->insert($items);
+    }
+
+
+    //邮寄订单新增接口
+    public function create(Request $request)
+    {
         //验证
         $validated = $request->validate([
             'a_id' => 'required|numeric',
@@ -54,7 +88,8 @@ class TestController extends Controller
         //逻辑
         $number = $this->number();      //订单编号
 
-        //数据处理
+        $this->items($number,$request->input('items'));     //写入邮寄物品
+
         $aAddress = DB::table('addresses')->select('country as a_country','en_name as a_en_name','cn_name as a_cn_name','phone as a_phone','email as a_email','province as a_province','city as a_city','area as a_area','detail as a_detail','postcode as a_postcode')->where('id',$request->input('a_id'))->first();
         $bAddress = DB::table('addresses')->select('country as b_country','en_name as b_en_name','cn_name as b_cn_name','phone as b_phone','email as b_email','province as b_province','city as b_city','area as b_area','detail as b_detail','postcode as b_postcode')->where('id',$request->input('b_id'))->first();
         $aAddress = json_decode(json_encode($aAddress), true);      //邮寄人地址
@@ -64,25 +99,23 @@ class TestController extends Controller
         $order_time = date('Y-m-d H:i:s',time());
         $state = "待取件";
         $params = array_merge($aAddress,$bAddress,request(['date','type','packaging','tax','note']),compact('number','user_id','order_time','state'));
-        Mail::create($params);
+        $mail = Mail::create($params);
 
-        //写入邮寄物品
-        $itemsArr = $request->input('items');
-        foreach ($itemsArr as $k => $v){
-            $items[$k]['mail_number'] = $number;
-            $items[$k]['sort'] = $v['sort'];
-            $items[$k]['number'] = $v['number'];
-            $items[$k]['money'] = '';
-            $items[$k]['created_at'] = date('Y-m-d H:i:s',time());
-            $items[$k]['updated_at'] = date('Y-m-d H:i:s',time());
-        }
-        DB::table('items')->insert($items);
+        event(new MessageExecuted($mail));      //发送相关消息
 
         //返回
         return response()->json(
             $data = ['message'=>'ok'],
             $status = 200
         );
+    }
+
+
+    //邮寄详情接口
+    public function show(Request $request)
+    {
+
+
     }
 
 }

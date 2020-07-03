@@ -24,13 +24,17 @@ class UserController extends Controller
         //验证
         $this->validate(request(),[
             'name' => 'required|unique:admin_users,name|min:1',
-            'password' => 'required|min:1'
+            'password' => 'required|min:1',
+            'real_name' => 'required|min:1',
+            'phone' => 'required|numeric|min:1',
         ]);
 
         //逻辑
         $name = request('name');
         $password = bcrypt(request('password'));
-        $parameter = compact('name','password');
+        $real_name = request('real_name');
+        $phone = request('phone');
+        $parameter = compact('name','password','real_name','phone');
         AdminUser::create($parameter);
 
         //返回
@@ -46,12 +50,16 @@ class UserController extends Controller
     {
         //验证
         $this->validate(request(),[
-            'name' => 'required|unique:admin_users,name|min:1',
+            'name' => 'required|min:1',
+            'real_name' => 'required|min:1',
+            'phone' => 'required|numeric|min:1',
         ]);
 
         //逻辑
         $user = AdminUser::find(request('id'));
         $user->name = request('name');
+        $user->real_name = request('real_name');
+        $user->phone = request('phone');
         $user->save();
 
         //返回

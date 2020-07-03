@@ -30,7 +30,6 @@ Route::group(['middleware' => 'wechat'], function (){
     //省市区接口
     Route::get('/address/china', 'AddressController@china');
 
-
     //商城首页接口
     Route::get('/goods', 'GoodsController@index');
     //商品详情页
@@ -45,6 +44,12 @@ Route::group(['middleware' => 'wechat'], function (){
     //个人中心接口
     Route::get('/user/index', 'UserController@index');
 
+    //邮寄首页接口
+    Route::get('/mail/index', 'MailsController@index');
+    Route::post('/mail/create', 'MailsController@create');
+    Route::get('/mail/show', 'MailsController@show');
+
 });
 
+include_once('manage.php');
 include_once('admin.php');

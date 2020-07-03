@@ -42,6 +42,14 @@
 				<div id="menu_style" class="menu_style">
 					<ul class="nav nav-list" id="nav_list">
 						<li class="home"><a href="javascript:void(0)" name="/admin/home" class="iframeurl" title=""><i class="icon-home"></i><span class="menu-text"> 系统首页 </span></a></li>
+						@can('mails')
+							<li><a href="#" class="dropdown-toggle"><i class="icon-desktop"></i><span class="menu-text"> 邮寄管理 </span><b class="arrow icon-angle-down"></b></a>
+								<ul class="submenu">
+									<li class="home"><a href="javascript:void(0)" name="/admin/sort" title="分类管理"  class="iframeurl"><i class="icon-double-angle-right"></i>分类管理</a></li>
+									<li class="home"><a  href="javascript:void(0)" name="/admin/goods"  title="商品列表" class="iframeurl"><i class="icon-double-angle-right"></i>商品列表</a></li>
+								</ul>
+							</li>
+						@endcan
 						@can('goods')
 						<li><a href="#" class="dropdown-toggle"><i class="icon-desktop"></i><span class="menu-text"> 商品管理 </span><b class="arrow icon-angle-down"></b></a>
 							<ul class="submenu">

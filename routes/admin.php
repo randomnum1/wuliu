@@ -90,6 +90,10 @@ Route::group(['prefix' => 'admin','middleware' => 'log'], function (){
             //Route::get('/system/date/add', '\App\Admin\Controllers\SystemController@add');
         });
 
+        Route::group(['middleware' => 'can:mails'], function(){
+
+        });
+
     });
 
 });

@@ -62,5 +62,6 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'wechat' => \App\Http\Middleware\WeChat::class,
         'log' => \App\Http\Middleware\Log::class,
+        'manage' => \App\Http\Middleware\CheckManage::class,
     ];
 }

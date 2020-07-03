@@ -16,6 +16,9 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\QueryExecuted' => [
             'App\Listeners\QueryListener',
         ],
+        'App\Events\MessageExecuted' => [
+            'App\Listeners\MessageListener',
+        ],
     ];
 
     /**
