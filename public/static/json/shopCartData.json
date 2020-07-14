@@ -1,0 +1,24 @@
+{
+    "shoppingCart": [{
+        "title": "诺优能",
+        "price": 250,
+        "per": "罐",
+        "num": 1,
+        "img": "http://pics.sc.chinaz.com/files/pic/pic9/201509/apic14546.jpg",
+        "id": 1
+    }, {
+        "title": "飞鹤",
+        "price": 200,
+        "per": "罐",
+        "num": 2,
+        "img": "https://www.splitshire.com/wp-content/uploads/2016/02/SplitShire-2851.jpg",
+        "id": 2
+    }, {
+        "title": "金领冠",
+        "price": 300,
+        "per": "罐",
+        "num": 3,
+        "img": "https://images5.alphacoders.com/442/442617.jpg",
+        "id": 3
+    }]
+}

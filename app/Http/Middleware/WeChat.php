@@ -17,9 +17,7 @@ class WeChat
     {
         if (!$request->session()->exists('user')) {
             $path = str_replace('/','-', $request->path());
-            return redirect()->action(
-                'WeChatController@auth2', ["path" => $path]
-            );
+            return redirect("/auth2/$path");
         }
         return $next($request);
     }

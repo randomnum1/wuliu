@@ -49,9 +49,10 @@
     <script src="/back/assets/layer/layer.js" type="text/javascript" ></script>
     <script src="/back/assets/laydate/laydate.js" type="text/javascript"></script>
     <script src="/back/js/dragDivResize.js" type="text/javascript"></script>
-
+    <script src="/back/assets/js/jquery.easy-pie-chart.min.js"></script>
+    <script src="/back/js/lrtk.js" type="text/javascript" ></script>
     <!--图片预览-->
-    <link rel="stylesheet" href="/back/css/mediazoom.css"/>
+    <link rel="stylesheet" href="/back/css/mediazoom.css?v=1.1"/>
     <script src="/back/js/mediazoom.js"></script>
 
     <title></title>

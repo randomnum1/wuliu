@@ -10,44 +10,46 @@ class WechatController extends Controller
 {
 
     //网页授权
-    public function auth2($path)
+    public function auth2()
     {
         //微信授权相关接口
-//        if ( !isset($_GET["code"]) ) {
-//            $redirect_url = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
-//            $jumpurl = $this->oauth2_snsapi_userinfo($redirect_url);
-//            Header("Location: $jumpurl");
-//        }else {
-//            $access_token_oauth2 = $this->oauth2_access_token($_GET['code']);
-//            $people = $this->oauth2_get_user_info($access_token_oauth2['access_token'],$access_token_oauth2['openid']);
-//        }
-        $people['nickname'] = '英北物流';
-        $people['headimgurl'] = '2.jpg';
-        $people['openid'] = 'xnsajkxnsak132456';
-
-        //存储会员信息
-        session(['user.nickname' => $people['nickname']]);
-        session(['user.head' => $people['headimgurl']]);
-        session(['user.openid' => $people['openid']]);
-
-        //逻辑
-        $user = User::where('openid',$people['openid'])->first();
-        if($user) {
-            session(['user.id' => $user->id]);
-            $user->nickname = $people['nickname'];
-            $user->head = $people['headimgurl'];
-            $user->updated_at = date('Y-m-d H:i:s',time());
-            $user->save();
+        if ( !isset($_GET["code"]) ) {
+            $redirect_url = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+            $jumpurl = $this->oauth2_snsapi_userinfo($redirect_url);
+            Header("Location: $jumpurl");
         }else {
-            $user = User::create(
-                ['nickname'=>$people['nickname'],'head'=>$people['headimgurl'],'openid'=>$people['openid']]
-            );
-            session(['user.id' => $user->id]);
-        }
+            $access_token_oauth2 = $this->oauth2_access_token($_GET['code']);
+            $people = $this->oauth2_get_user_info($access_token_oauth2['access_token'],$access_token_oauth2['openid']);
 
-        //渲染
-        $path = str_replace('-','/',$path);
-        return redirect($path);
+            // $people['nickname'] = '英北物流';
+            // $people['headimgurl'] = '2.jpg';
+            // $people['openid'] = 'xnsajkxnsak132456';
+
+            //存储会员信息
+            session(['user.nickname' => $people['nickname']]);
+            session(['user.head' => $people['headimgurl']]);
+            session(['user.openid' => $people['openid']]);
+
+            // 逻辑
+            $user = User::where('openid',$people['openid'])->first();
+            if($user) {
+                session(['user.id' => $user->id]);
+                $user->nickname = $people['nickname'];
+                $user->head = $people['headimgurl'];
+                $user->updated_at = date('Y-m-d H:i:s',time());
+                $user->save();
+            }else {
+                $user = User::create(
+                    ['nickname'=>$people['nickname'],'head'=>$people['headimgurl'],'openid'=>$people['openid']]
+                );
+                session(['user.id' => $user->id]);
+            }
+
+            //渲染
+            //$path = str_replace('-','/',$path);
+            // return redirect($path);
+            return redirect()->away('http://wl.miyacloud.cn/index.html');
+        }
     }
 
 

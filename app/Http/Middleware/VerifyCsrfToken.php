@@ -15,6 +15,7 @@ class VerifyCsrfToken extends Middleware
         '/address/*',
         '/goods/*',
         '/mail/*',
-        '/manage/*'
+        '/manage/*',
+        '/admin/*'
     ];
 }

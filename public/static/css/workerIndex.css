@@ -1,0 +1,83 @@
+.workerIndex_wrap {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.index_top {
+    width: 100%;
+    height: 120px;
+    position: relative;
+    padding: 10px;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.index_top .img {
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+    background-image: url('../imgs/1.jpg');
+    background-position: center;
+    background-size: cover;
+}
+
+.operateArea {
+    width: 100%;
+    height: auto;
+    position: relative;
+    padding: 0 10px;
+    box-sizing: border-box;
+}
+
+.operateArea ul {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    border-radius: 5px;
+    box-sizing: border-box;
+    border: 1px solid #eee;
+    float: left;
+}
+
+.operateArea ul li {
+    width: 50%;
+    height: 80px;
+    position: relative;
+    float: left;
+    box-sizing: border-box;
+}
+
+.operateArea ul li:nth-child(1),
+.operateArea ul li:nth-child(3) {
+    border-right: 1px solid #eee;
+}
+
+.operateArea ul li:nth-child(1),
+.operateArea ul li:nth-child(2) {
+    border-bottom: 1px solid #eee;
+}
+
+.operateLi_icon {
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    left: 20%;
+    top: 15px;
+    transform: translateX(-50%);
+    border-radius: 50%;
+    box-sizing: border-box;
+    text-align: center;
+    line-height: 50px;
+    font-size: 20px;
+    color: #fff;
+}
+
+.operateLi_title {
+    width: 60%;
+    height: 100%;
+    position: absolute;
+    right: 0;
+    line-height: 80px;
+    font-weight: 700;
+}

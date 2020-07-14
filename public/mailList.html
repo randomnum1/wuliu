@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <!--主要I是强制让文档的宽度与设备宽度保持1:1，最大宽度1.0，禁止屏幕缩放。-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+    <!--这个也是iphone私有标签，允许全屏浏览。-->
+    <meta content="yes" name="apple-mobile-web-app-capable">
+    <!--iphone的私有标签，iphone顶端状态条的样式。-->
+    <meta content="black" name="apple-mobile-web-app-status-bar-style">
+    <!--禁止数字自动识别为电话号码，这个比较有用，因为一串数字在iphone上会显示成蓝色，样式加成别的颜色也是不生效的。-->
+    <meta content="telephone=no" name="format-detection">
+    <!--禁止email识别-->
+    <meta content="email=no" name="format-detection">
+    <title>运单追踪</title>
+    <script src="./static/node_modules/vue/dist/vue.js"></script>
+    <script src="./static/node_modules/axios/dist/axios.js"></script>
+    <script src="./static/js/public.js"></script>
+    <link rel="stylesheet" href="./static/font/iconfont.css">
+    <link rel="stylesheet" href="./static/css/normalize.css">
+    <link rel="stylesheet" href="./static/css/public.css">
+    <link rel="stylesheet" href="./static/css/mailList.css">
+</head>
+
+<body>
+    <div class="mailList_wrap" id="mailList_wrap">
+        <div class="listBox br5 clearfix">
+            <div class="list_title">运单号：{{orderNum}}<span class="iconfont icon-copy" @click.stop="copy(orderNum)" style="padding-left: 10px;box-sizing: border-box;"></span></div>
+            <div class="list_lt fl clearfix">
+                <span class="w40 fl clearfix oneLine">{{sendCity}}</span>
+                <span class="iconfont icon-tuxing fl clearfix" style="display:block;width: 20%;font-size: 20px;"></span>
+                <span class="w40 fl clearfix oneLine">{{collectCity}}</span>
+            </div>
+            <div class="list_gt fl clearfix" @click="toDetail(orderNum)">
+                <!-- <span v-if="finishedTime != ''" class="w100 fl">运单签收时间：</span>
+                <span v-if="finishedTime != ''" class="w100 fl">{{finishedTime}}</span> -->
+                运单详情<span class="iconfont icon-youjiantou"></span>
+            </div>
+        </div>
+        <div class="list_status clearfix">
+            <ul>
+                <li v-for="(item,index) in list">
+                    <div class="status" :class="{'active':item.click}">{{item.status}}</div>
+                    <div class="statusDetail">
+                        <div class="lineIcon" :class="{'bgcActive':item.click}">
+                            <div class="lineIcon1 iconfont" :class="{'icon-shouye1':index == 0}"><span v-if="index == list.length-1 && index != 0">发</span></div>
+                        </div>
+                        <div class="w100" style="padding-left: 30px;box-sizing: border-box;">
+                            <div class="w100">{{item.scanDateTime}}</div>
+                            <div class="w100" v-if="!item.click">{{item.remark}}</div>
+                            <div class="w100" v-if="item.click"><span @click="toDetail(orderNum)" style="color: #c30">{{item.remark}}</span></div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <script>
+        var vm = new Vue({
+            el: "#mailList_wrap",
+            data: {
+                orderNum: "",
+                sendCity: "",
+                collectCity: "",
+                urls: {
+                    getDataUrl: "/mail/show"
+                },
+                list: [],
+                detailData: {}
+            },
+            created: async function() {
+                var _this = this;
+                _this.urls = await getPublicUrl(_this.urls);
+                _this.searchObj = await getSearch();
+                window.localStorage.removeItem('detailData')
+                _this.getData();
+            },
+            methods: {
+                // 复制运单号
+                copy(item) {
+                    // 获取需要复制的文字
+                    const copyStr = item;
+                    // 创建input标签存放需要复制的文字
+                    const oInput = document.createElement('input');
+                    // 把文字放进input中，供复制
+                    oInput.value = copyStr;
+                    document.body.appendChild(oInput);
+                    // 选中创建的input
+                    oInput.select();
+                    // 执行复制方法， 该方法返回bool类型的结果，告诉我们是否复制成功
+                    const copyResult = document.execCommand('copy')
+                        // 操作中完成后 从Dom中删除创建的input
+                    document.body.removeChild(oInput)
+                        // 根据返回的复制结果 给用户不同的提示
+                    if (copyResult) {
+                        alert('单号已复制')
+                    } else {
+                        alert('复制失败')
+                    }
+                },
+                reverse(array) {
+                    var newArr = [];
+                    for (var i = array.length - 1; i >= 0; i--) {
+                        newArr[newArr.length] = array[i];
+                    }
+                    return newArr;
+                },
+                toDetail(num) {
+                    window.localStorage.setItem('detailData', JSON.stringify(this.detailData))
+                    let url = "waybillDetail.html";
+                    window.location.href = url + "?num=" + num;
+                },
+                getData() {
+                    var _this = this;
+                    axios({
+                            method: 'post',
+                            url: _this.urls.getDataUrl,
+                            withCredentials: true,
+                            data: {
+                                number: _this.searchObj.id
+                            }
+                        })
+                        .then(res => {
+                            if (res.status == 200) {
+                                _this.list = res.data.list;
+                                _this.list = _this.reverse(_this.list);
+                                _this.sendCity = res.data.a_country;
+                                _this.collectCity = res.data.b_country;
+                                _this.orderNum = res.data.number;
+                                _this.detailData = res.data.detail;
+                                _this.detailData.pay = res.data.pay;
+                                _this.detailData.pay_update = res.data.pay_update;
+                                _this.detailData.number = _this.orderNum;
+                            }
+
+                        })
+                        .catch(function(error) {
+                            // handle error
+                            if (error.response.status == 422) {
+                                // console.log("用户名或者密码错误！");
+                                alert("参数错误")
+                            }
+                            if (err.response.status == 400) {
+                                alert("登录过期请重新登录")
+                                window.location.href = 'login.html'
+                            }
+                        })
+                },
+            }
+        })
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <!--主要I是强制让文档的宽度与设备宽度保持1:1，最大宽度1.0，禁止屏幕缩放。-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+    <!--这个也是iphone私有标签，允许全屏浏览。-->
+    <meta content="yes" name="apple-mobile-web-app-capable">
+    <!--iphone的私有标签，iphone顶端状态条的样式。-->
+    <meta content="black" name="apple-mobile-web-app-status-bar-style">
+    <!--禁止数字自动识别为电话号码，这个比较有用，因为一串数字在iphone上会显示成蓝色，样式加成别的颜色也是不生效的。-->
+    <meta content="telephone=no" name="format-detection">
+    <!--禁止email识别-->
+    <meta content="email=no" name="format-detection">
+    <title>首页</title>
+    <!-- 引入vue，axios -->
+    <script src="./static/node_modules/axios/dist/axios.js"></script>
+    <script src="./static/node_modules/vue/dist/vue.js"></script>
+    <script src="./static/js/public.js"></script>
+    <link rel="stylesheet" href="./static/css/normalize.css">
+    <link rel="stylesheet" href="./static/font/iconfont.css">
+    <link rel="stylesheet" href="./static/css/public.css">
+    <link rel="stylesheet" href="./static/node_modules/swiper/css/swiper.min.css">
+    <link rel="stylesheet" href="./static/css/index.css">
+</head>
+
+<body>
+    <div class="index_wrap" id="index_wrap">
+        <div class="menuList">
+            <ul class="clearfix" id="menu">
+                <li class="clearfix" v-for="(item,index) in menuList" @click="checkedMenu(index)">
+                    <div class="iconBtn iconfont" :class="item.icon"></div>
+                    <div class="menuTitle">{{item.title}}</div>
+                </li>
+            </ul>
+        </div>
+        <div class="index_Con">
+            <ul class="clearfix">
+                <!-- 首页 -->
+                <li v-if="num == 0">
+                    <div class="swiper">
+                        <!-- 轮播图 -->
+                        <!-- <div class="swiper-container ">
+                            <div class="swiper-wrapper">
+                                <div class="swiper-slide">
+                                    <img src="./imgs/1.jpg" alt="">
+                                </div>
+                                <div class="swiper-slide">
+                                    <img src="./imgs/2.jpg" alt="">
+                                </div>
+                                <div class="swiper-slide">
+                                    <img src="./imgs/3.jpg" alt="">
+                                </div>
+                            </div>
+                            <div class="swiper-pagination"></div>
+                        </div> -->
+                        <img src="./static/imgs/1.jpg" alt="">
+                    </div>
+                    <div class="headCon">
+                        <ul class="clearfix">
+                            <li class="clearfix" @click="jumptoOther('deposit')">
+                                <div class="headCon_iconBtn">
+                                    <div style="width: 50px;height: 50px;position: relative;border-radius: 50%;box-sizing: border-box;margin: 25px auto; text-align: center;line-height: 50px;background-color: #336699;color: #fff;">
+                                        <span class="iconfont icon-rukuguanli" style="color: #fff;"></span>
+                                    </div>
+                                </div>
+                                <div class="headCon_title">
+                                    <div class="titleTop">寄存</div>
+                                    <div class="subTitle">随心存</div>
+                                </div>
+                            </li>
+                            <li class="clearfix" @click="jumptoOther('retrieve')">
+                                <div class="headCon_iconBtn">
+                                    <div style="width: 50px;height: 50px;position: relative;border-radius: 50%;box-sizing: border-box;margin: 25px auto; text-align: center;line-height: 50px;background-color: #FF6666;color: #fff;">
+                                        <span class="iconfont icon-chukuguanli" style="color: #fff;"></span>
+                                    </div>
+                                </div>
+                                <div class="headCon_title">
+                                    <div class="titleTop">取回</div>
+                                    <div class="subTitle">随心取</div>
+                                </div>
+                            </li>
+                            <li class="clearfix" @click="jumptoOther('transport')">
+                                <div class="headCon_iconBtn">
+                                    <div style="width: 50px;height: 50px;position: relative;border-radius: 50%;box-sizing: border-box;margin: 25px auto; text-align: center;line-height: 50px;background-color: #99CC33;color: #fff;">
+                                        <span class="iconfont icon-zhuanyunche" style="color: #fff;"></span>
+                                    </div>
+                                </div>
+                                <div class="headCon_title">
+                                    <div class="titleTop">转运</div>
+                                    <div class="subTitle">中英直达</div>
+                                </div>
+                            </li>
+                            <li class="clearfix" @click="jumptoOther('mail')">
+                                <div class="headCon_iconBtn">
+                                    <div style="width: 50px;height: 50px;position: relative;border-radius: 50%;box-sizing: border-box;margin: 25px auto; text-align: center;line-height: 50px;background-color: #009999;color: #fff;">
+                                        <span class="iconfont icon-fapiaoyoujidizhi" style="color: #fff;"></span>
+                                    </div>
+                                </div>
+                                <div class="headCon_title">
+                                    <div class="titleTop">邮寄</div>
+                                    <div class="subTitle">中英直达</div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <!-- 查快递 -->
+                <li v-if="num == 1" class="searchExpress">
+                    <div class="billSearch">
+                        <div class="searchInput"><span class="iconfont icon-chaxun"></span><input type="text"></div>
+                        <div class="searchBtn">搜索</div>
+                    </div>
+                    <div class="expressList">
+                        <ul class="expressListMenu">
+                            <li @click="checkStatus('JC',0)">
+                                <a href="#" :class="{active:expressListMenuNum == 0}">寄&nbsp;&nbsp;存</a>
+                            </li>
+                            <li @click="checkStatus('ZY',1)">
+                                <a href="#" :class="{active:expressListMenuNum == 1}">转&nbsp;&nbsp;运</a>
+                            </li>
+                            <li @click="checkStatus('YJ',2)">
+                                <a href="# " :class="{active:expressListMenuNum==2 } ">邮&nbsp;&nbsp;寄</a>
+                            </li>
+                            <li @click="checkStatus('DG',3)">
+                                <a href="#" :class="{active:expressListMenuNum == 3}">代&nbsp;&nbsp;购</a>
+                            </li>
+                        </ul>
+                        <ul class=" expressListCon">
+                            <!-- TODO:寄存列表数据为死数据 -->
+                            <li v-if="expressListMenuNum == 0">
+                                <div class="depositList">
+                                    <div class="depostTop">
+                                        <div class="billNum">寄存单号：123456879546</div>
+                                        <div class="billStatus">待取件</div>
+                                    </div>
+                                    <div @click="jumptoOther('depositDetail','2')">
+                                        <div class="depostThings oneLine">寄存物品详情:箱子2，纸箱1，其他内容, 箱子2，纸箱1，其他内容
+                                        </div>
+                                        <div class="depostThings oneLine">上海市静安区北京西路669号东展商业大厦9c</div>
+                                        <div class="depostBottom">
+                                            <div class="postCode">L77AG</div>
+                                            <div class="billDate">2020-05-28</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="operationBtn">
+                                        <div>去取回</div>
+                                        <div>去转运</div>
+                                    </div>
+                                </div>
+                                <div class="depositList">
+                                    <div class="depostTop">
+                                        <div class="billNum">寄存单号：123456879546</div>
+                                        <div class="billStatus">已完成</div>
+                                    </div>
+                                    <div class="depostThings oneLine">寄存物品详情:箱子2，纸箱1，其他内容, 箱子2，纸箱1，其他内容
+                                    </div>
+                                    <div class="depostThings oneLine">上海市静安区北京西路669号东展商业大厦9c</div>
+                                    <div class="depostBottom">
+                                        <div class="postCode">L77AG</div>
+                                        <div class="billDate">2020-05-28</div>
+                                    </div>
+                                    <div class="operationBtn">
+                                        <div>去取回</div>
+                                        <div>去转运</div>
+                                    </div>
+                                </div>
+                            </li>
+                            <!-- TODO:转运未写 -->
+                            <li v-if="expressListMenuNum == 1">转运</li>
+                            <!-- TODO:数据为死数据 -->
+                            <li v-if="expressListMenuNum == 2">
+                                <div class="depositList" v-for="(item,index) in mailList">
+                                    <div class="depostTop">
+                                        <div class="billNum">邮寄单号：{{item.number}}</div>
+                                        <div class="billStatus">{{item.state}}</div>
+                                    </div>
+                                    <div class="postAddr" @click="jumptoOther('mailDetail',item.number)">
+                                        <div>
+                                            <div style="line-height: 30px;font-size: 16px;font-weight: 550;">{{item.a_country}}</div>
+                                            <div style="line-height: 20px;font-size: 14px">{{item.a_name}}</div>
+                                        </div>
+                                        <div>
+                                            <span class="iconfont icon-changjiantou-you" style="color: #c30;font-size: 40px;"></span>
+                                        </div>
+                                        <div>
+                                            <div class="oneLine" style="line-height: 30px;font-size: 16px;font-weight: 550;">{{item.b_country}}</div>
+                                            <div style="line-height: 20px;font-size: 14px">{{item.b_name}}</div>
+                                        </div>
+                                    </div>
+                                    <div class="depostThings oneLine">物品详情：{{item.items}}
+                                    </div>
+                                    <div class="operationBtn">
+                                        <div>查物流</div>
+                                    </div>
+                                </div>
+                            </li>
+                            <!-- TODO:代购列表未写 -->
+                            <li v-if="expressListMenuNum == 3">代购</li>
+                        </ul>
+                    </div>
+                </li>
+                <li v-if="num == 2"></li>
+                <li v-if="num == 3"></li>
+                <li v-if="num == 4">
+                    <div class="myTop">
+                        <div class="userImg">
+                            <!-- TODO:后期图片地址为在线地址 :src="userInfo.head" -->
+                            <img :src="userInfo.head" alt="">
+                        </div>
+                        <div class="userName">{{userInfo.nickname}}</div>
+                        <div class="extension">
+                            <a href="#" style="display: inline-block;color: #F2CB51;">
+                                <span class="iconfont icon-shenqingchengweiVIP" style="color: #F2CB51;padding: 0 5px;box-sizing: border-box;"></span>
+                                <span style="color: #A7784C;"> 推广得积分，快去行动吧！</span>
+                                <span>立即推广<span class="iconfont icon-arrow-l"  style="color: #F2CB51;"></span></span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="myContent">
+                        <ul>
+                            <li v-for="item in operationList" @click="num = 1;expressListMenuNum=2">
+                                <span style="width: 40px;height: 40px;border: 1px solid #ccc;box-sizing: border-box;position: absolute;top: 10px;left: 50%;transform: translateX(-50%);border-radius: 50%;text-align: center;line-height: 40px;font-size: 20px;" class="iconfont" :class="item.icon"></span>
+                                <span style="line-height: 30px;width: 100%;position: absolute;top: 50px;text-align: center;font-size: 12px;">{{item.title}}</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="myBottom">
+                        <ul>
+                            <li v-for="item in list" @click="jumpItem(item.url)">
+                                <span class="iconfont" :class="item.icon " style="width: 20px;display: inline-block;"></span>
+                                <span>{{item.title}}</span>
+                                <span class="iconfont icon-arrow-l rightIcon"></span>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+    <script src="./static/node_modules/swiper/js/swiper.min.js"></script>
+    <script>
+        //用户名正则，4到16位（字母，数字，下划线，减号）
+        // var uPattern = /^[a-zA-Z0-9~!@#$%^&*-_]{6,12}$/;
+    </script>
+    <script>
+        var vm = new Vue({
+            el: "#index_wrap",
+            data: {
+                num: 0,
+                expressListMenuNum: 0,
+                userInfo: {},
+                menuList: [{
+                    title: "首页",
+                    icon: "icon-shouye1"
+                }, {
+                    title: "查快递",
+                    icon: "icon-search"
+                }, {
+                    title: "商城",
+                    icon: "icon-shangcheng"
+                }, {
+                    title: "购物车",
+                    icon: "icon-gouwuche"
+                }, {
+                    title: "我的",
+                    icon: "icon-ziyuan"
+                }],
+                operationList: [{
+                    title: "待付款",
+                    icon: "icon-daifukuan",
+                    type: "tobepaid"
+                }, {
+                    title: "待发货",
+                    icon: "icon-daifahuo",
+                    type: "tobedelivered"
+                }, {
+                    title: "待收货",
+                    icon: "icon-tubiaolunkuo-",
+                    type: "tobereceived"
+                }, {
+                    title: "我的订单",
+                    icon: "icon-wodedingdan",
+                    type: "myorder"
+                }],
+                list: [{
+                    icon: "icon-icon-",
+                    title: "我的购物车",
+                    type: "",
+                    url: "shoppingCart.html"
+                }, {
+                    icon: "icon-dizhi1",
+                    title: "我的地址",
+                    type: "",
+                    url: "addressList.html"
+                }, {
+                    icon: "icon-erweima",
+                    title: "我的推广码",
+                    type: "",
+                    url: "#"
+                }, {
+                    icon: "icon-falvshengming",
+                    title: "法律声明",
+                    type: "",
+                    url: "#"
+                }, {
+                    icon: "icon-changjianwenti",
+                    title: "常见问题",
+                    type: "",
+                    url: "#"
+                }, {
+                    icon: "icon-shoufeibiaozhun1",
+                    title: "收费标准",
+                    type: "",
+                    url: "#"
+                }],
+                urls: {
+                    mailSearchUrl: "/mail/search",
+                    userIndexUrl: "/user/index"
+                },
+                mailList: []
+            },
+            created: async function() {
+                this.urls = await getPublicUrl(this.urls);
+                window.localStorage.clear();
+                this.getIndex();
+                this.checkedMenu(this.num)
+                if (this.expressListMenuNum == 0) {
+                    this.checkStatus('JC', 0);
+                }
+                if (this.expressListMenuNum == 1) {
+                    this.checkStatus('ZY', 1)
+                }
+                if (this.expressListMenuNum == 2) {
+                    this.checkStatus('YJ', 2)
+                }
+                if (this.expressListMenuNum == 3) {
+                    this.checkStatus('DG', 3)
+                }
+            },
+            watch: {
+                // 监听num【底部菜单】与expressListMenuNum【查快递tab栏菜单】的值
+                // TODO:监听同时存储在localStorage中
+                num: function(value) {
+                    if (value == 2 || vlaue == 3) {
+                        return;
+                    }
+                    var ul = document.getElementById("menu");
+                    var lis = ul.children;
+                    for (let i = 0; i < lis.length; i++) {
+                        var icon = lis[i].firstChild;
+                        icon.style.color = "#333";
+                    }
+                    var icon = lis[this.num].firstChild;
+                    icon.style.color = "#c30";
+                    icon.style.fontWeight = 700;
+                    window.localStorage.setItem("num", this.num)
+                },
+                expressListMenuNum: function(value) {
+                    if (this.expressListMenuNum == 0) {
+                        this.checkStatus('JC', 0);
+                    }
+                    if (this.expressListMenuNum == 1) {
+                        this.checkStatus('ZY', 1)
+                    }
+                    if (this.expressListMenuNum == 2) {
+                        this.checkStatus('YJ', 2)
+                    }
+                    if (this.expressListMenuNum == 3) {
+                        this.checkStatus('DG', 3)
+                    }
+                    window.localStorage.setItem("expressListMenuNum", this.expressListMenuNum)
+                }
+            },
+            mounted() {
+                var ul = document.getElementById("menu");
+                var lis = ul.children;
+                for (let i = 0; i < lis.length; i++) {
+                    var icon = lis[i].firstChild;
+                    icon.style.color = "#333";
+                }
+                var icon = lis[this.num].firstChild;
+                icon.style.color = "#c30";
+                icon.style.fontWeight = 700;
+
+
+            },
+            methods: {
+                // 获取地址栏地址存储在对象中
+                getSearch: function() {
+                    var name, value;
+                    // var str = "http://10.102.10.33:5500/detail.html?recordId=94"
+                    var str = decodeURI(location.href); //取得整个地址栏
+                    var num = str.indexOf("?")
+                    str = str.substr(num + 1); //取得所有参数   stringvar.substr(start [, length ]
+                    var arr = str.split("&"); //各个参数放到数组里
+                    var obj = {};
+                    for (var i = 0; i < arr.length; i++) {
+                        num = arr[i].indexOf("=");
+                        var name = arr[i].substring(0, num);
+                        var value = arr[i].slice(num + 1);
+                        obj[name] = value;
+                    }
+                    return obj;
+                },
+                // 本地保存tab栏切换的状态值
+                setIndex() {
+                    window.localStorage.setItem("num", this.num)
+                    window.localStorage.setItem("expressListMenuNum", this.expressListMenuNum)
+                },
+                getIndex() {
+                    if (window.localStorage.getItem("num")) {
+                        this.num = window.localStorage.getItem("num")
+                    }
+                    if (window.localStorage.getItem("expressListMenuNum")) {
+                        this.expressListMenuNum = Number(window.localStorage.getItem("expressListMenuNum"))
+                    }
+                },
+                jumpItem(url) {
+                    if (url == "#") {
+                        return;
+                    } else {
+                        this.setIndex();
+                        window.location.href = url;
+                    }
+                },
+                checkedMenu(index) {
+                    var _this = this;
+                    if (index != 2 || index != 3) {
+                        this.num = index;
+                    } else {
+                        return;
+                    }
+                    var ul = document.getElementById("menu");
+                    var lis = ul.children;
+                    for (let i = 0; i < lis.length; i++) {
+                        var icon = lis[i].firstChild;
+                        icon.style.color = "#333";
+                    }
+                    var icon = lis[index].firstChild;
+                    icon.style.color = "#c30";
+                    icon.style.fontWeight = 700;
+                    if (index == 2) {
+                        window.location.href = 'shoppingMall.html?num=' + this.num + "&expressListMenuNum=" + this.expressListMenuNum
+                    }
+                    if (index == 3) {
+                        window.location.href = 'shoppingCart.html'
+                    }
+                    if (index == 4) {
+                        axios({
+                                method: 'get',
+                                url: _this.urls.userIndexUrl,
+                                withCredentials: true
+                            })
+                            .then(res => {
+                                if (res.status == 200) {
+                                    _this.userInfo = res.data[0];
+                                }
+
+                            })
+                            .catch(function(error) {
+                                // handle error
+                                if (error.response.status == 422) {
+                                    // console.log("用户名或者密码错误！");
+                                    alert("参数错误")
+                                }
+                                if (err.response.status == 400) {
+                                    alert("登录过期请重新登录")
+                                    window.location.href = 'login.html'
+                                }
+                            })
+
+                    }
+
+                },
+                checkStatus(status, index) {
+                    var _this = this;
+                    _this.expressListMenuNum = index;
+                    switch (status) {
+                        case "YJ":
+                            axios({
+                                    method: 'post',
+                                    url: _this.urls.mailSearchUrl,
+                                    withCredentials: true
+                                })
+                                .then(res => {
+                                    if (res.status == 200) {
+                                        _this.mailList = res.data;
+                                    }
+                                })
+                                .catch(function(error) {
+                                    // handle error
+                                    if (error.response.status == 422) {
+                                        // console.log("用户名或者密码错误！");
+                                        alert("参数错误")
+                                    }
+                                    if (err.response.status == 400) {
+                                        alert("登录过期请重新登录")
+                                        window.location.href = 'login.html'
+                                    }
+                                })
+                            break;
+                    }
+                },
+                jumptoOther(type, id) {
+                    if (type == "mail") {
+                        window.location.href = "appointmentMail.html"
+                    }
+                    if (type == 'mailDetail') {
+                        this.setIndex()
+                        window.location.href = 'mailList.html?id=' + id + "&num=" + this.num + "&expressListMenuNum=" + this.expressListMenuNum
+                    }
+                    if (type == 'deposit') {
+                        window.location.href = 'appointmentDeposit.html'
+                    }
+                    if (type == 'depositDetail') {
+                        // window.location.href = 'depositDetail.html?id=' + id
+                    }
+                    if (type == 'transport') {
+                        window.location.href = 'appointmentTransport.html'
+                    }
+                },
+                swiper() { //轮播图
+                    var mySwiper = new Swiper('.swiper-container', {
+                        effect: 'coverflow', //滑动效果
+                        touchAngle: 30, //滑动的角度超过30度无效
+                        // 轮播图的方向，也可以是vertical方向
+                        direction: 'horizontal',
+                        //环形切换关闭
+                        loop: true,
+                        // 切换的速度
+                        speed: 200, //滑动或者自动换页时的速度
+                        // 如果需要分页器
+                        pagination: {
+                            el: '.swiper-pagination',
+                            clickable: true,
+                            type: 'bullets',
+                        },
+                        paginationClickable: true,
+                        // 这样，即使我们滑动之后， 定时器也不会被清除
+                        autoplayDisableOnInteraction: false,
+
+                        on: { //滑动调用该方法
+                            slideChangeTransitionEnd: function() {
+                                var slide = this.activeIndex;
+                                //测试用
+                                //	        		alert("当前位置： "+slide);//滑动结束时，告诉我现在是第几个slide（第几页）
+                            },
+                        },
+                    });
+                    mySwiper.pagination.bullets.css('background', 'white');
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>

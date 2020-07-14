@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <!--主要I是强制让文档的宽度与设备宽度保持1:1，最大宽度1.0，禁止屏幕缩放。-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+    <!--这个也是iphone私有标签，允许全屏浏览。-->
+    <meta content="yes" name="apple-mobile-web-app-capable">
+    <!--iphone的私有标签，iphone顶端状态条的样式。-->
+    <meta content="black" name="apple-mobile-web-app-status-bar-style">
+    <!--禁止数字自动识别为电话号码，这个比较有用，因为一串数字在iphone上会显示成蓝色，样式加成别的颜色也是不生效的。-->
+    <meta content="telephone=no" name="format-detection">
+    <!--禁止email识别-->
+    <meta content="email=no" name="format-detection">
+    <title>出库</title>
+    <script src="../static/node_modules/vue/dist/vue.js"></script>
+    <script src="../static/node_modules/axios/dist/axios.js"></script>
+    <!-- 移动ui -->
+    <link rel="stylesheet" href="https://unpkg.com/mint-ui/lib/style.css">
+    <script src="https://unpkg.com/mint-ui/lib/index.js"></script>
+    <script src="../static/js/public.js"></script>
+    <link rel="stylesheet" href="../static/font/iconfont.css">
+    <link rel="stylesheet" href="../static/css/normalize.css">
+    <link rel="stylesheet" href="../static/css/public.css">
+    <link rel="stylesheet" href="../static/css/appointmentMail.css">
+    <link rel="stylesheet" href="../static/css/workDetail.css">
+</head>
+
+<body>
+    <div class="appointmentMail_wrap" id="appointmentMail_wrap">
+        <div class="content">
+            <div class="basicInfo br5">
+                <div style="float:left;width: 10%;text-align: center;height: 100%;line-height: 90px;color: #c30;font-size: 18px;">寄
+                </div>
+                <div class="basicInfo_userInfo">
+                    <div style="padding: 0 5px;box-sizing: border-box;">
+                        <div class="w100" style="font-weight: 700;line-height: 30px;">
+                            <div class="w30 oneLine">{{sendInfo.cn_name}}</div>
+                            <div class="w70 oneLine">{{sendInfo.phone}}</div>
+                        </div>
+                        <div class="w100 multiLine2" style="line-height:20px;height: 40px;">
+                            {{sendInfo.address }}
+                        </div>
+                        <div class="w100" style="line-height: 20px;">
+                            <div class="w30 oneLine">{{sendInfo.postcode}}</div>
+                            <div class="w70 oneLine">{{sendInfo.email}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="basicInfo br5">
+                <div style="float:left;width: 10%;text-align: center;height: 100%;line-height: 90px;color: #666;font-size: 18px;">收
+                </div>
+                <div class="basicInfo_userInfo">
+                    <!-- <div v-if="JSON.stringify(mailInfo.collectInfo) == '{}'" style="line-height: 90px;color:#666">收件人信息
+                    </div> -->
+                    <div style="padding: 0 5px;box-sizing: border-box;">
+                        <div class="w100" style="font-weight: 700;line-height: 30px;">
+                            <div class="w30 oneLine">{{collectInfo.cn_name}}</div>
+                            <div class="w70 oneLine">{{collectInfo.phone}}</div>
+                        </div>
+                        <div class="w100 multiLine2" style="line-height:20px;height: 40px;">
+                            {{collectInfo.address}}
+                        </div>
+                        <div class="w100" style="line-height: 20px;">
+                            <div class="w30 oneLine">{{collectInfo.postcode}}</div>
+                            <div class="w70 oneLine">{{collectInfo.email}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pickUpInfo br5">
+                <div class="pickUpInfoLi">
+                    <div class="w25 tac">物品信息</div>
+                    <div class="w75 tal">
+                        <input type="text" class="oneLine" readonly v-model="mailInfo.items">
+                    </div>
+                </div>
+                <div class="pickUpInfoLi">
+                    <div class="w25 tac">取件方式</div>
+                    <div class="w75" style="padding: 0 5px;box-sizing: border-box;">{{mailInfo.type}}</div>
+                </div>
+                <div class="pickUpInfoLi">
+                    <div class="w25 tac">取件日期</div>
+                    <div class="w75 tal">
+                        <input type="text" placeholder="无" v-model="mailInfo.date" readonly class="tal oneLine">
+                    </div>
+                </div>
+            </div>
+            <div class="pickUpInfo br5">
+                <div class="pickUpInfoLi">
+                    <div class="w25 tac">需要包装</div>
+                    <div class="w75">
+                        <div style="width: 100%;height:40px;position: absolute;top: 0;right: 0;background-color: transparent;padding: 0 5px;box-sizing: border-box;">{{mailInfo.packaging ?'是' : '否'}}</div>
+                        <!-- <span @click="setMessage('pack','no')" class="iconfont icon-beizhu rightIcon0"></span> -->
+                    </div>
+                </div>
+                <div class="pickUpInfoLi">
+                    <div class="w25 tac">是否包税</div>
+                    <div class="w75">
+                        <div style="width: 100%;height:40px;position: absolute;top: 0;right: 0;background-color: transparent;padding: 0 5px;box-sizing: border-box;">{{mailInfo.tax ?'是' : '否'}}</div>
+                        <!-- <span @click="setMessage('tax','no')" class="iconfont icon-beizhu rightIcon0"></span> -->
+                    </div>
+                </div>
+                <div class="pickUpInfoLi">
+                    <div class="w25 tac">备注信息</div>
+                    <div class="w75 tal">
+                        <input type="text" v-model="mailInfo.note" placeholder="暂无备注" readonly class="tal oneLine">
+                    </div>
+                </div>
+            </div>
+            <div class="pickUpInfo br5">
+                <div class="pickUpInfoLi">
+                    <div class="w25 tac">取件员</div>
+                    <div class="w75 tal">
+                        <input type="text" v-model="mailInfo.take_user" readonly class="tal oneLine">
+                    </div>
+                </div>
+            </div>
+            <div class="pickUpInfo br5">
+                <div class="pickUpInfoLi">
+                    <div class="w25 tac">库位号</div>
+                    <div class="w75 tal">
+                        <div style="width: 100%;height:40px;position: absolute;top: 0;right: 0;background-color: transparent;padding: 0 5px;box-sizing: border-box;">{{mailInfo.name}}{{mailInfo.location}}</div>
+
+                        <!-- <input type="text" v-model="mailInfo.location" readonly class="tal oneLine"> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="addBtn" @click="submit">出库</div>
+    </div>
+    <script>
+        var vm = new Vue({
+            el: "#appointmentMail_wrap",
+            data: {
+                sendInfo: {},
+                collectInfo: {},
+                mailInfo: {},
+                searchObj: {},
+                urls: {
+                    getDataUrl: "/manage/out/show",
+                    updateUrl: "/manage/out/update",
+                    // getDataUrl: "http://127.0.0.1:8002/deposit/putinStorage"
+                }
+            },
+            created: async function() {
+                _this = this;
+                _this.searchObj = await getSearch();
+                _this.urls = await workgetPublicUrl(_this.urls);
+                _this.getData();
+            },
+            methods: {
+                submit() {
+                    var _this = this;
+                    let obj = {};
+                    obj.number = _this.mailInfo.number;
+                    obj.name = _this.mailInfo.name;
+                    obj.location = _this.mailInfo.location;
+                    axios({
+                            method: 'post',
+                            url: _this.urls.updateUrl,
+                            withCredentials: true,
+                            data: obj
+                        })
+                        .then(res => {
+                            if (res.status == 200) {
+                                window.localStorage.clear();
+                                window.location.href = "OutboundList.html";
+                            }
+
+                        })
+                        .catch(function(error) {
+                            // handle error
+                            if (error.response.status == 422) {
+                                // console.log("用户名或者密码错误！");
+                                alert("参数错误")
+                            }
+                            if (err.response.status == 400) {
+                                alert("登录过期请重新登录")
+                                window.location.href = 'login.html'
+                            }
+                        })
+                },
+                getData() {
+                    var _this = this;
+                    axios({
+                            method: 'post',
+                            url: _this.urls.getDataUrl,
+                            withCredentials: true,
+                            data: {
+                                number: _this.searchObj.id
+                            }
+                        })
+                        .then(res => {
+                            if (res.status == 200) {
+                                _this.mailInfo = res.data;
+                                _this.sendInfo = _this.mailInfo.address[0];
+                                _this.collectInfo = _this.mailInfo.address[1];
+                            }
+
+                        })
+                        .catch(function(error) {
+                            // handle error
+                            if (error.response.status == 422) {
+                                // console.log("用户名或者密码错误！");
+                                alert("参数错误")
+                            }
+                            if (err.response.status == 400) {
+                                alert("登录过期请重新登录")
+                                window.location.href = 'login.html'
+                            }
+                        })
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>

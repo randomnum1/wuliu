@@ -1,0 +1,37 @@
+{
+    "sendInfo": {},
+    "collectInfo": {},
+    "thingsInfo": "",
+    "pickUpType": "上门取件",
+    "pickUpDate": "",
+    "pickUpDatelist": [{
+        "date": "2020-06-01",
+        "checked": false
+    }, {
+        "date": "2020-06-02",
+        "checked": false
+    }, {
+        "date": "2020-06-03",
+        "checked": false
+    }, {
+        "date": "2020-06-04",
+        "checked": false
+    }, {
+        "date": "2020-06-05",
+        "checked": false
+    }, {
+        "date": "2020-06-06",
+        "checked": false
+    }, {
+        "date": "2020-06-07",
+        "checked": false
+    }],
+    "packStatus": false,
+    "packRemarks": "包装说明",
+    "taxStatus": false,
+    "taxRemarks": "包税备注",
+    "remarks": "",
+    "chargeStandard": "收费标准",
+    "readStatus": false,
+    "legalDescription": "本人/单位(姓名/单位名称)于(时间)委托(委托人或单位)申 请购买了(产品名称)，由于(概述问题)，本人/单位 (姓名/单位名称)现申请获得(产品名称)的管理权。为了避免权属纠纷，特做如下说明：(姓名/单位名称)是(产品名称)的真正所有者，今后由(产品名称)引起的纠纷和造成的一切后果，其责任概由(姓名/单位名称)承担，与(委托人或单位)无关。"
+}

@@ -7,7 +7,7 @@
 */
 
 //微信授权接口
-Route::get('/auth2/{path}', 'WeChatController@auth2');
+Route::get('/auth2', 'WeChatController@auth2');
 
 //微信auth授权后才可访问
 Route::group(['middleware' => 'wechat'], function (){
@@ -46,9 +46,16 @@ Route::group(['middleware' => 'wechat'], function (){
 
     //邮寄首页接口
     Route::get('/mail/index', 'MailsController@index');
+    //邮寄新增接口
     Route::post('/mail/create', 'MailsController@create');
-    Route::get('/mail/show', 'MailsController@show');
-
+    //邮寄查询接口
+    Route::post('/mail/search', 'MailsController@search');
+    //邮寄详情接口
+    Route::post('/mail/show', 'MailsController@show');
+    //邮寄付款接口
+    Route::post('/mail/pay', 'MailsController@pay');
+    //邮寄修改付款凭证接口
+    Route::post('/mail/pay_update', 'MailsController@pay_update');
 });
 
 include_once('manage.php');

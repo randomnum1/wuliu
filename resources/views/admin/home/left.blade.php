@@ -45,8 +45,10 @@
 						@can('mails')
 							<li><a href="#" class="dropdown-toggle"><i class="icon-desktop"></i><span class="menu-text"> 邮寄管理 </span><b class="arrow icon-angle-down"></b></a>
 								<ul class="submenu">
-									<li class="home"><a href="javascript:void(0)" name="/admin/sort" title="分类管理"  class="iframeurl"><i class="icon-double-angle-right"></i>分类管理</a></li>
-									<li class="home"><a  href="javascript:void(0)" name="/admin/goods"  title="商品列表" class="iframeurl"><i class="icon-double-angle-right"></i>商品列表</a></li>
+									<li class="home"><a href="javascript:void(0)" name="/admin/mails/all" title="全部订单"  class="iframeurl"><i class="icon-double-angle-right"></i>全部订单</a></li>
+									<li class="home"><a  href="javascript:void(0)" name="/admin/mails/check"  title="待核价订单" class="iframeurl"><i class="icon-double-angle-right"></i>待核价订单</a></li>
+									<li class="home"><a  href="javascript:void(0)" name="/admin/mails/pay"  title="待付款订单" class="iframeurl"><i class="icon-double-angle-right"></i>待付款订单</a></li>
+									<li class="home"><a  href="javascript:void(0)" name="/admin/mails/confirm"  title="待确认订单" class="iframeurl"><i class="icon-double-angle-right"></i>待确认订单</a></li>
 								</ul>
 							</li>
 						@endcan
@@ -63,13 +65,13 @@
 							<a href="#" class="dropdown-toggle"><i class="icon-user"></i><span class="menu-text"> 会员管理 </span><b class="arrow icon-angle-down"></b></a>
 							<ul class="submenu">
 								<li class="home"><a href="javascript:void(0)" name="/admin/member" title="会员列表"  class="iframeurl"><i class="icon-double-angle-right"></i>会员列表</a></li>
-
 							</ul>
 						</li>
 						@endcan
 						@can('system')
 						<li><a href="#" class="dropdown-toggle"><i class="icon-cogs"></i><span class="menu-text"> 系统管理 </span><b class="arrow icon-angle-down"></b></a>
 							<ul class="submenu">
+								<li class="home"><a href="javascript:void(0)" name="/admin/system/warehouse" title="仓库管理" class="iframeurl"><i class="icon-double-angle-right"></i>仓库管理</a></li>
 								<li class="home"><a href="javascript:void(0)" name="/admin/system/date" title="日期设置" class="iframeurl"><i class="icon-double-angle-right"></i>日期设置</a></li>
 								<li class="home"><a href="javascript:void(0)" name="/admin/system/log" title="系统日志" class="iframeurl"><i class="icon-double-angle-right"></i>系统日志</a></li>
 							</ul>

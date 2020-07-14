@@ -11,22 +11,32 @@ class LoginController extends Controller
     //判断是否登陆
     public function check(Request $request)
     {
-        if (!$request->session()->exists('manage')) {
+        if ($request->session()->exists('manage')) {
             return response()->json(
                 $data = ['message' => 'ok!'],
                 $status = 200
             );
         }else{
-            return response()->json(
-                $data = ['message' => 'no login!'],
-                $status = 400
-            );
+            $openid = $request->session()->get('openid');
+            $manage = DB::table('admin_users')->where('openid',$openid)->first();
+            if($manage){
+                session(['manage.id' => $manage->id, 'manage.real_name' => $manage->real_name, 'manage.phone' => $manage->phone]);
+                return response()->json(
+                    $data = ['message' => 'ok!'],
+                    $status = 200
+                );
+            }else{
+                return response()->json(
+                    $data = ['message' => 'no login!'],
+                    $status = 400
+                );
+            }
         }
     }
 
 
     //登陆接口
-    public function login()
+    public function login(Request $request)
     {
         //验证
         $this->validate(request(),[
@@ -37,7 +47,7 @@ class LoginController extends Controller
         //逻辑
         $user = request(['name','password']);
         if(\Auth::guard("admin")->attempt($user)){
-            $openid = $this->auth2();   //微信认证
+            $openid = $request->session()->get('openid');
             //初次登陆，写入openid
             $id = \Auth::guard("admin")->user()->id;
             DB::table('admin_users')->where('id',$id)->update(['openid' => $openid]);
@@ -62,19 +72,20 @@ class LoginController extends Controller
      * 微信网页授权
      * @return openid
      */
-    public function auth2()
+    public function auth2(Request $request)
     {
-//        if ( !isset($_GET["code"]) ) {
-//            $redirect_url = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
-//            $jumpurl = $this->oauth2_snsapi_base($redirect_url);
-//            Header("Location: $jumpurl");
-//        }else {
-//            $access_token_oauth2 = $this->oauth2_access_token($_GET['code']);
-//            $openid = $access_token_oauth2['openid'];
-//        }
-
-        $openid = 'xnsajkxnsak132456';
-        return $openid;
+       if ( !isset($_GET["code"]) ) {
+           $redirect_url = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+           $jumpurl = $this->oauth2_snsapi_base($redirect_url);
+           Header("Location: $jumpurl");
+       }else {
+           $access_token_oauth2 = $this->oauth2_access_token($_GET['code']);
+           $openid = $access_token_oauth2['openid'];
+           session(['openid' => $openid]);
+           return redirect()->away('http://wl.miyacloud.cn/workPersonnel/login.html');
+            // $openid = 'xnsajkxnsak132456';
+            // return $openid;
+       }
     }
 
 

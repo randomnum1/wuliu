@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use \App\Date;
 
-
 class SystemController extends Controller
 {
 
@@ -81,4 +80,110 @@ class SystemController extends Controller
         }
         DB::table('dates')->insert($date);
     }
+
+
+    //仓库列表
+    public function warehouse(Request $request)
+    {
+        //逻辑
+        $where = array();
+        $name = $request->get('name');
+        if((!empty($name)) && ($name != '全部') ) {
+            $where[] = array('name','=',$name);
+        }
+        $warehouse = DB::table('warehouse')->where($where)->get();
+        //仓库分类
+        $sorts = DB::table('warehouse')->select('name')->groupBy('name')->get();
+
+        //返回
+        return view('admin.system.warehouse',compact('warehouse','sorts'));
+    }
+
+
+    //添加仓库
+    public function warehouse_add(Request $request)
+    {
+        //验证
+        $validatedData = $request->validate([
+            'name' => 'required|unique:warehouse|min:1|max:10',
+        ]);
+
+        //逻辑
+        DB::table('warehouse')->insert([
+            'name' => $request->get('name'),
+        ]);
+
+        //返回
+        return response()->json(
+            $data = ['message'=>'ok!'],
+            200
+        );
+    }
+
+
+    //添加库位
+    public function location_add(Request $request)
+    {
+        //验证
+        $validatedData = $request->validate([
+            'name' => 'required|min:1|max:10',
+            'location' => 'required|min:1|max:10',
+        ]);
+
+        //逻辑
+        $null = DB::table('warehouse')->where('name',$request->get('name'))->whereNull('location')->first();
+        if($null){
+            DB::table('warehouse')->where('id',$null->id)->update([
+                'location' => $request->get('location'),
+            ]);
+        }else{
+            DB::table('warehouse')->insert([
+                'name' => $request->get('name'),
+                'location' => $request->get('location'),
+            ]);
+        }
+
+        //返回
+        return response()->json(
+            $data = ['message'=>'ok!'],
+            200
+        );
+    }
+
+
+    //修改库位名称
+    public function location_update(Request $request)
+    {
+        //验证
+        $validatedData = $request->validate([
+            'location' => 'required|min:1|max:10',
+        ]);
+
+        //逻辑
+        DB::table('warehouse')->where('id',$request->get('id'))->update([
+            'location' => $request->get('location'),
+        ]);
+
+        //返回
+        return response()->json(
+            $data = ['message'=>'ok!'],
+            200
+        );
+    }
+
+
+    //删除库位
+    public function delete(Request $request)
+    {
+        //逻辑
+        $id = $request->get('id');
+        DB::table('warehouse')->where('id',$id)->delete();
+
+        //返回
+        return response()->json(
+            $data = ['message'=>'ok!'],
+            200
+        );
+    }
+
 }

@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <!--主要I是强制让文档的宽度与设备宽度保持1:1，最大宽度1.0，禁止屏幕缩放。-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+    <!--这个也是iphone私有标签，允许全屏浏览。-->
+    <meta content="yes" name="apple-mobile-web-app-capable">
+    <!--iphone的私有标签，iphone顶端状态条的样式。-->
+    <meta content="black" name="apple-mobile-web-app-status-bar-style">
+    <!--禁止数字自动识别为电话号码，这个比较有用，因为一串数字在iphone上会显示成蓝色，样式加成别的颜色也是不生效的。-->
+    <meta content="telephone=no" name="format-detection">
+    <!--禁止email识别-->
+    <meta content="email=no" name="format-detection">
+    <title>寄存</title>
+    <script src="./static/node_modules/vue/dist/vue.js"></script>
+    <script src="./static/node_modules/axios/dist/axios.js"></script>
+    <!-- 移动ui -->
+    <link rel="stylesheet" href="https://unpkg.com/mint-ui/lib/style.css">
+    <script src="https://unpkg.com/mint-ui/lib/index.js"></script>
+    <script src="./static/js/public.js"></script>
+    <link rel="stylesheet" href="./static/font/iconfont.css">
+    <link rel="stylesheet" href="./static/css/normalize.css">
+    <link rel="stylesheet" href="./static/css/public.css">
+    <link rel="stylesheet" href="./static/css/appointmentMail.css">
+</head>
+
+<body>
+    <div class="appointmentMail_wrap" id="appointmentMail_wrap">
+        <div class="content">
+            <div class="basicInfo br5">
+                <div class="iconfont icon-dizhi" style="float:left;width: 10%;text-align: center;height: 100%;line-height: 90px;color: #c30;font-size: 25px;">
+                </div>
+                <div class="basicInfo_userInfo">
+                    <div v-if="JSON.stringify(mailInfo.sendInfo) == '{}'" style="line-height: 90px;color:#666">请点击地址簿，选择地址信息
+                    </div>
+                    <div v-if="mailInfo.sendInfo" style="padding: 0 5px;box-sizing: border-box;">
+                        <div class="w100" style="font-weight: 700;line-height: 30px;">
+                            <div class="w30 oneLine">{{mailInfo.sendInfo.cn_name}}</div>
+                            <div class="w70 oneLine">{{mailInfo.sendInfo.phone}}</div>
+                        </div>
+                        <div class="w100 multiLine2" style="line-height:20px;height: 40px;">
+                            {{mailInfo.sendInfo.province}}{{mailInfo.sendInfo.city}}{{mailInfo.sendInfo.area}}{{mailInfo.sendInfo.detail}}
+                        </div>
+                        <div class="w100" style="line-height: 20px;">
+                            <div class="w30 oneLine">{{mailInfo.sendInfo.postcode}}</div>
+                            <div class="w70 oneLine">{{mailInfo.sendInfo.email}}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="basicInfo_addr" @click="toCheckedAddr('send')">地址簿</div>
+            </div>
+            <div class="pickUpInfo br5">
+                <div class="pickUpInfoLi">
+                    <div class="w25 tac">物品信息</div>
+                    <div class="w75 tar" @click.stop="toCheckedthings('thingsInfo')">
+                        <div style="width: 100%;height:40px;position: absolute;top: 0;right: 0;background-color: transparent;">
+                        </div>
+                        <span class="iconfont icon-arrow-l rightIcon0"></span>
+                        <span v-if="mailInfo.thingsInfo ==''"><input type="text" placeholder="请填写" class="tar oneLine" style="box-sizing: border-box;padding-right: 20px;"></span>
+                        <span class="oneLine" style="display: block;width: 92%;" v-if="mailInfo.thingsInfo !== ''">{{mailInfo.thingsInfo}}</span>
+                    </div>
+                </div>
+                <div class="pickUpInfoLi">
+                    <div class="w25 tac">取件方式</div>
+                    <div class="w75">{{mailInfo.pickUpType}}</div>
+                </div>
+                <div class="pickUpInfoLi">
+                    <div class="w25 tac">取件日期</div>
+                    <div class="w75 tal" @click.stop="messageBottomSwitch = true">
+                        <div style="width: 100%;height:40px;position: absolute;top: 0;right: 0;background-color: transparent;"></div>
+                        <span class="iconfont icon-arrow-l rightIcon0"></span>
+                        <input type="text" placeholder="可提前七天预约取件" v-model="mailInfo.pickUpDate" readonly class="tar oneLine">
+                    </div>
+                </div>
+            </div>
+            <div class="pickUpInfo br5">
+                <div class="pickUpInfoLi">
+                    <div class="w25 tac">需要包装</div>
+                    <div class="w75">
+                        <mt-switch v-model="mailInfo.packStatus"> </mt-switch>
+                        <span @click="setMessage('pack','no')" class="iconfont icon-beizhu rightIcon0"></span>
+                    </div>
+                </div>
+                <div class="pickUpInfoLi">
+                    <div class="w25 tac">备注信息</div>
+                    <div class="w75 tar">
+                        <input type="text" v-model="mailInfo.remarks" placeholder="给我们带句话吧" class="tar oneLine">
+                        <span class="iconfont icon-arrow-l"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="pickUpInfo br5">
+                <div class="pickUpInfoLi">
+                    <div class="w25 tac">收费标准</div>
+                    <div class="w75 tar" @click.stop="setMessage('charge','no')">
+                        <div style="width: 100%;height:40px;position: absolute;top: 0;right: 0;background-color: transparent;"></div>
+                        <input type="text" placeholder="点我查看收费标准" readonly class="tar oneLine">
+                        <span class="iconfont icon-arrow-l"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="w100" style="padding: 10px;box-sizing: border-box;"><span class="iconfont icon-wancheng1" @click="mailInfo.readStatus = !mailInfo.readStatus" :class="{active:mailInfo.readStatus}" style="position: relative;top: -2px;"></span>我已阅读并同意《<b @click="setMessage('legal','no')">法律免责声明</b>》</div>
+
+        </div>
+        <div class="addBtn" v-show="isOriginHei" @click="submit">预约寄存</div>
+        <div class="messageBox" v-if="messageSwitch">
+            <div class="boxContent">
+                <div class="messageTitle">{{message.title}}</div>
+                <div class="messageContent">{{message.content}}</div>
+                <div class="messageBtn" v-if="btnSwitch">
+                    <div class="cancleBtn" @click="messageSwitch = false">取消</div>
+                    <div class="confirmBtn" @click="confirmOperation">确定</div>
+                </div>
+                <div v-if="!btnSwitch" style="width: 100%;line-height: 40px;text-align: center;font-weight: 700;color: #CC3300;position: fixed;bottom: 0;" @click="messageSwitch=false">我知道了</div>
+            </div>
+        </div>
+        <div class="editAddr_messageBox" v-if="messageBottomSwitch">
+            <div class="areaBox">
+                <div style="position: relative;top: 0;height: 40px;line-height: 40px;font-weight: 550;">取件时间为下午，部分地区支持晚上取件</div>
+                <ul>
+                    <li v-for="(item,index) in mailInfo.pickUpDatelist" :class="{active:item.checked}" @click="areaChecked(index)">{{item.date}} <span class="iconfont rightIcon" :class="{'icon-duihao1':item.checked}" style="color: #CC3300;"></span></li>
+                </ul>
+                <div class="addBtn" @click="messageBottomSwitch = false">确认</div>
+            </div>
+        </div>
+    </div>
+    <script>
+        var vm = new Vue({
+            el: "#appointmentMail_wrap",
+            data: {
+                message: {
+                    title: "",
+                    content: "",
+                    type: ""
+                },
+                screenHeight: document.body.clientHeight, // 这里是给到了一个默认值 （这个很重要），
+                originHeight: document.body.clientHeight, //默认高度在watch里拿来做比较
+                isOriginHei: true,
+                messageSwitch: false,
+                btnSwitch: true,
+                messageBottomSwitch: false,
+                mailInfo: {},
+                thingsInfo: {}
+            },
+            created() {
+                this.getData();
+            },
+            mounted() {
+                const that = this
+                window.onresize = () => {
+                    return (() => {
+                        window.screenHeight = document.body.clientHeight
+                        that.screenHeight = window.screenHeight
+                    })()
+                }
+            },
+            watch: {
+                screenHeight(val) {
+                    console.log(this.screenHeight)
+                    if (this.originHeight != val) {
+                        this.isOriginHei = false;
+                    } else {
+                        this.isOriginHei = true;
+                    }
+                }
+            },
+            methods: {
+                // 地址簿选择地址
+                toCheckedAddr(type) {
+                    var url = "addressListChecked.html?state=" + type;
+                    window.location.href = url;
+                    window.localStorage.setItem("mailInfo", JSON.stringify(this.mailInfo));
+                },
+                toCheckedthings(type) {
+                    var url = "thingsInfo.html?type=" + type;
+                    window.location.href = url;
+                    window.localStorage.setItem("mailInfo", JSON.stringify(this.mailInfo))
+                },
+                setMessage(type, btn) {
+                    if (type == 'legal') {
+                        this.message.title = "法律免责声明";
+                        this.message.content = this.mailInfo.legalDescription;
+                    }
+                    if (type == 'pack') {
+                        this.message.title = "包装说明";
+                        this.message.content = this.mailInfo.packRemarks;
+                    }
+                    if (type == 'tax') {
+                        this.message.title = "包税说明";
+                        this.message.content = this.mailInfo.taxRemarks;
+                    }
+                    if (type == 'charge') {
+                        this.message.title = "收费说明";
+                        this.message.content = this.mailInfo.chargeStandard;
+                    }
+                    if (btn == 'no') {
+                        this.btnSwitch = false;
+                    }
+                    this.messageSwitch = true;
+                },
+                getLocalData() { //获取localStorage数据
+                    judgeEquipment()
+                    if (window.localStorage.getItem('mailInfo')) {
+                        var obj = JSON.parse(window.localStorage.getItem('mailInfo'));
+                        for (key in obj) {
+                            this.mailInfo[key] = obj[key]
+                        }
+                    }
+                    if (window.localStorage.getItem('send')) {
+                        var obj = JSON.parse(window.localStorage.getItem('send'));
+                        // console.log(obj);
+                        for (key in obj) {
+                            this.mailInfo.sendInfo[key] = obj[key]
+                        }
+                    }
+                    if (window.localStorage.getItem('collect')) {
+                        var obj = JSON.parse(window.localStorage.getItem('collect'));
+                        for (key in obj) {
+                            this.mailInfo.collectInfo[key] = obj[key]
+                        }
+                    }
+                    if (window.localStorage.getItem('thingsInfo')) {
+                        var obj = JSON.parse(window.localStorage.getItem('thingsInfo'));
+                        for (key in obj) {
+                            this.thingsInfo[key] = obj[key]
+                        }
+                        this.mailInfo.thingsInfo = '纸箱' + this.thingsInfo.boxNum + ',行李箱' + this.thingsInfo.packNum + ',' + this.thingsInfo.other
+                    }
+                },
+                areaChecked(index) {
+                    this.mailInfo.pickUpDatelist.forEach(element => {
+                        element.checked = false;
+                    });
+                    this.mailInfo.pickUpDatelist[index].checked = true;
+                    this.mailInfo.pickUpDate = this.mailInfo.pickUpDatelist[index].date;
+                },
+                submit() {
+                    window.localStorage.clear();
+                    // TODO:数据提交未写
+                    window.localStorage.setItem("num", 1)
+                    window.localStorage.setItem("expressListMenuNum", 0)
+                    window.location.href = 'index.html';
+                },
+                getData() {
+                    var _this = this;
+                    axios.get('./static/json/appointmentMail.json', {})
+                        .then((res) => {
+                            _this.mailInfo = res.data;
+                            console.log(_this.mailInfo);
+
+                            _this.getLocalData()
+                        })
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>

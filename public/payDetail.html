@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <!--主要I是强制让文档的宽度与设备宽度保持1:1，最大宽度1.0，禁止屏幕缩放。-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+    <!--这个也是iphone私有标签，允许全屏浏览。-->
+    <meta content="yes" name="apple-mobile-web-app-capable">
+    <!--iphone的私有标签，iphone顶端状态条的样式。-->
+    <meta content="black" name="apple-mobile-web-app-status-bar-style">
+    <!--禁止数字自动识别为电话号码，这个比较有用，因为一串数字在iphone上会显示成蓝色，样式加成别的颜色也是不生效的。-->
+    <meta content="telephone=no" name="format-detection">
+    <!--禁止email识别-->
+    <meta content="email=no" name="format-detection">
+    <title>运单详情</title>
+    <script src="../static/node_modules/vue/dist/vue.js"></script>
+    <script src="../static/node_modules/axios/dist/axios.js"></script>
+    <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+    <!-- 移动ui -->
+    <link rel="stylesheet" href="https://unpkg.com/mint-ui/lib/style.css">
+    <script src="https://unpkg.com/mint-ui/lib/index.js"></script>
+    <script src="../static/js/public.js"></script>
+    <link rel="stylesheet" href="../static/font/iconfont.css">
+    <link rel="stylesheet" href="../static/css/normalize.css">
+    <link rel="stylesheet" href="../static/css/public.css">
+    <link rel="stylesheet" href="../static/css/appointmentMail.css">
+</head>
+
+<body>
+    <div class="appointmentMail_wrap" id="appointmentMail_wrap">
+        <div class="content clearfix">
+            <div class="pickUpInfo br5 clearfix" style="padding: 0;color: #FF9A50;">
+                <div class="w100">
+                    <div class="w30" style="height: 40px;line-height: 40px;padding-left:10px;box-sizing: border-box;">支付金额：</div>
+                    <div style="width: auto;font-size: 20px;display: inline-block;text-align: right;height: 40px;line-height: 40px;padding-right: 10px;box-sizing: border-box;float: right;">￥{{sumCost}}.00</div>
+                </div>
+            </div>
+            <div class="pickUpInfo br5 clearfix" style="padding: 0;">
+                <div class="w100">
+                    <div style="width:auto;height: 40px;line-height: 40px;padding-left:10px;box-sizing: border-box;float: left;">银行卡账户：</div>
+                    <div style="width: auto;display: inline-block;text-align: right;height: 40px;line-height: 40px;padding-right: 10px;box-sizing: border-box;">{{bankNum}}<span class="iconfont icon-copy" @click.stop="copy(bankNum)"></span></div>
+                </div>
+            </div>
+            <div class="pickUpInfo br5 clearfix" style="padding: 0;">
+                <div class="w100">
+                    <div style="width:auto;height: 40px;line-height: 40px;padding-left:10px;box-sizing: border-box;float: left;">微信收款码：</div>
+                    <div style="width: 100px;display: inline-block;text-align: right;height: auto;padding: 10px;box-sizing: border-box;">
+                        <img src="./static/imgs/wx.jpg" alt="" style="width: 100%;height:auto" @click="bigImgSwitch=true;bigImgUrl='./static/imgs/wx.jpg'">
+                    </div>
+                </div>
+            </div>
+            <div class="pickUpInfo br5 clearfix" style="padding: 0;">
+                <div class="w100">
+                    <div style="width:auto;height: 40px;line-height: 40px;padding-left:10px;box-sizing: border-box;float: left;">支付宝收款码：</div>
+                    <div style="width: 100px;display: inline-block;text-align: right;height: auto;padding: 10px;box-sizing: border-box;">
+                        <img src="./static/imgs/zfb.jpg" alt="" style="width: 100%;height:auto" @click="bigImgSwitch=true;bigImgUrl='./static/imgs/zfb.jpg'">
+                    </div>
+                </div>
+            </div>
+            <div class="pickUpInfo br5">
+                <div class="uploadImg clearfix">
+                    <div class="w20 tac fl">图片上传</div>
+                    <div class="w75 tar fl" style="padding: 0px 5px 5px 5px;box-sizing: border-box;">
+                        <div v-show="uploadImg.length < maxImgs" style="width: 30%;height: 80px;border: 1px solid #eee;border-radius: 5px;box-sizing: border-box;margin-right: 5px;position: relative;float: left;margin-top: 5px;">
+                            <div style="width: 100%;height:80px;position: absolute;top: 0;right: 0;background-color: transparent;text-align: center;line-height: 80px;font-size: 40px;color: #ccc;">+</div>
+                            <input v-on:change="upload" multiple type="file" id="files" ref="files" accept="image/*" name="upload" style="width: 100%;height:80px;position: absolute;top: 0;right: 0;background-color: transparent;opacity: 0;">
+                        </div>
+                        <div v-for="(item,index) in uploadImg" style="width: 30%;height: 80px;border-radius: 5px;box-sizing: border-box;margin-right: 5px;position: relative;float: left;margin-top: 5px;float: left;">
+                            <img :src="item.url" ref="imgs" alt="" style="width: 100%;height: 100%;position: relative;float: left;border-radius: 5px;" @click="bigImg(uploadImg,item.url)">
+                            <span v-on:click="removeImg(item, index)" style="font-size: 20px;text-align:center;background-color: #f00;color: #fff;display: inline-block;width: 20px;height: 20px;position: absolute;top: 0;right: 0;border-radius: 50%;text-align:center;line-height: 20px;">×</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="addBtn" @click="submit">确定付款</div>
+        <!-- 图片放大 -->
+        <div class="bigImg" v-if="bigImgSwitch" style="width: 100%;height: 100%;position: fixed;top: 0;left: 0;background-color: rgba(0,0,0,.3);">
+            <div style="width: 40px;height: 40px;line-height: 40px;text-align: right;position: absolute;top: 10px;right: 10px;font-size: 40px;color: #c30;z-index:200" @click="bigImgSwitch = false">×</div>
+            <img :src="bigImgUrl" alt="" style="width: 100%;height: auto;position: absolute;top: 50%;left: 50%;transform: translate(-50%,-50%);"></div>
+    </div>
+    <script>
+        var vm = new Vue({
+            el: "#appointmentMail_wrap",
+            data: {
+                costNum: 950,
+                bankNum: "265432563236561232646",
+                urls: {
+                    updateUrl: "/mail/pay_update",
+                    getDataUrl: "/mail/pay"
+                },
+                maxImgs: 3,
+                uploadImg: [],
+                base64Imgs: [],
+                imgsUrlArr: [],
+                sumCost: 0,
+                bigImgSwitch: false,
+                bigImgUrl: ""
+
+            },
+            created: async function() {
+                _this = this;
+                _this.searchObj = await getSearch();
+                _this.sumCost = _this.searchObj.payNum;
+                _this.urls = await workgetPublicUrl(_this.urls);
+                _this.payStatus = _this.searchObj.status === "false" ? false : true;
+            },
+            methods: {
+                submit() {
+                    var _this = this;
+                    let obj = {};
+                    obj.number = _this.searchObj.id;
+                    obj.picture = _this.base64Imgs;
+                    if (obj.picture.length == 0) {
+                        alert("请上传凭证！")
+                        return;
+                    }
+                    // 付款接口
+                    if (!_this.payStatus) {
+                        axios({
+                                method: 'post',
+                                url: _this.urls.getDataUrl,
+                                withCredentials: true,
+                                data: obj
+                            })
+                            .then(res => {
+                                if (res.status == 200) {
+                                    window.localStorage.removeItem("detailData");
+                                    window.location.href = "mailList.html?id=" + _this.searchObj.id;
+                                }
+                            })
+                            .catch(function(error) {
+                                // handle error
+                                if (error.response.status == 422) {
+                                    // console.log("用户名或者密码错误！");
+                                    alert("参数错误")
+                                }
+                                if (err.response.status == 400) {
+                                    alert("登录过期请重新登录")
+                                    window.location.href = 'login.html'
+                                }
+                            })
+                    }
+                    // 修改付款凭证
+                    if (_this.payStatus) {
+                        axios({
+                                method: 'post',
+                                url: _this.urls.updateUrl,
+                                withCredentials: true,
+                                data: obj
+                            })
+                            .then(res => {
+                                if (res.status == 200) {
+                                    window.localStorage.removeItem("detailData");
+                                    window.location.href = "mailList.html?id=" + _this.searchObj.id;
+                                }
+                            })
+                            .catch(function(error) {
+                                // handle error
+                                if (error.response.status == 422) {
+                                    // console.log("用户名或者密码错误！");
+                                    alert("参数错误")
+                                }
+                                if (err.response.status == 400) {
+                                    alert("登录过期请重新登录")
+                                    window.location.href = 'login.html'
+                                }
+                            })
+                    }
+                },
+                bigImg(imgArr, currentImg) {
+                    WeixinJSBridge.invoke("imagePreview", {
+                        "urls": imgArr,
+                        "current": currentImg
+                    });
+                },
+                copy(item) {
+                    // 获取需要复制的文字
+                    const copyStr = item;
+                    // 创建input标签存放需要复制的文字
+                    const oInput = document.createElement('input');
+                    // 把文字放进input中，供复制
+                    oInput.value = copyStr;
+                    document.body.appendChild(oInput);
+                    // 选中创建的input
+                    oInput.select();
+                    // 执行复制方法， 该方法返回bool类型的结果，告诉我们是否复制成功
+                    const copyResult = document.execCommand('copy')
+                        // 操作中完成后 从Dom中删除创建的input
+                    document.body.removeChild(oInput)
+                        // 根据返回的复制结果 给用户不同的提示
+                    if (copyResult) {
+                        alert('账号已复制')
+                    } else {
+                        alert('复制失败')
+                    }
+                },
+                removeImg: function(item, index) {
+                    var _this = this;
+                    for (var i = 0; i < _this.uploadImg.length; i++) {
+                        if (_this.uploadImg[i].id == item.id) {
+                            _this.uploadImg.splice(index, 1);
+                            _this.base64Imgs.splice(index, 1)
+                        }
+                    }
+                },
+                upload: function(e) {
+                    // console.log(123)
+                    var that = this;
+                    var file = this.$refs.files.files;
+                    that.base64Imgs = new Array()
+                    if (that.uploadImg.length + file.length > that.maxImgs) {
+                        // TODO:此处需要设置message框样式
+                        that.messageSwitch = true;
+                        that.message = "图片不得超过" + that.maxImgs + "张";
+                        return;
+                    } else {
+                        for (let i = 0; i < file.length; i++) {
+                            var fileType = file[i].type;
+                            if (fileType.indexOf("image") == -1) {
+                                that.messageSwitch = true;
+                                that.message = "请选择图片文件";
+                                return
+                            }
+                            var windowURL = window.URL || window.webkitURL;
+                            var binaryData = [];
+                            binaryData.push(file[i]);
+                            //创建图片文件的url
+                            file[i].url = window.URL.createObjectURL(new Blob(binaryData, {
+                                type: 'application/zip'
+                            }));
+                            file[i].id = file[i].lastModified.toString();
+                            if (that.uploadImg.length < that.maxImgs) {
+                                that.uploadImg.unshift(file[i]);
+                                that.imgsUrlArr.unshift(file[i].url)
+                            } else {
+                                that.messageSwitch = true;
+                                that.message = "图片不得超过三张";
+                                return
+                            }
+                        }
+                        for (let i = 0; i < that.uploadImg.length; i++) {
+                            that.pressImg({
+                                file: that.uploadImg[i],
+                                succ: function(resultFile) {
+                                    //如果不是null就是压缩成功
+                                    if (resultFile) {
+                                        that.base64Imgs.push(resultFile)
+                                    }
+                                }
+                            })
+                        }
+                    }
+                },
+                pressImg: function(param) {
+                    //如果没有回调函数就不执行
+                    if (param) {
+                        //如果file没定义返回null
+                        if (param.file == undefined) return param.succ(null);
+                        //给参数附初始值
+                        param.targetSize = param.hasOwnProperty("targetSize") ? param.targetSize : -1;
+                        param.width = param.hasOwnProperty("width") ? param.width : -1;
+                        param.fileName = param.hasOwnProperty("fileName") ? param.fileName : "image";
+                        param.quality = param.hasOwnProperty("quality") ? param.quality : 0.92;
+                        var _this = this;
+                        // 得到文件类型
+                        var fileType = param.file.type;
+                        // console.log(fileType) //image/jpeg
+                        if (fileType.indexOf("image") == -1) {
+                            // console.log('请选择图片文件^_^');
+                            return param.succ(null);
+                        }
+                        //如果当前size比目标size小，直接输出
+                        var size = param.file.size;
+                        if (param.targetSize > size) {
+                            return param.succ(param.file);
+                        }
+                        // 读取file文件,得到的结果为base64位
+                        _this.changeFileToBaseURL(param.file, function(base64) {
+                            _this.dealImage(base64, 500, function(base64) {
+                                param.succ(base64);
+                            });
+                        });
+                    }
+                },
+                dealImage: function(base64, w, callback) {
+                    var newImage = new Image();
+                    var quality = 0.6; //压缩系数0-1之间
+                    newImage.src = base64;
+                    newImage.setAttribute("crossOrigin", 'Anonymous'); //url为外域时需要
+                    var imgWidth, imgHeight;
+                    newImage.onload = function() {
+                        imgWidth = this.width;
+                        imgHeight = this.height;
+                        var canvas = document.createElement("canvas");
+                        var ctx = canvas.getContext("2d");
+                        if (Math.max(imgWidth, imgHeight) > w) {
+                            if (imgWidth > imgHeight) {
+                                canvas.width = w;
+                                canvas.height = w * imgHeight / imgWidth;
+                            } else {
+                                canvas.height = w;
+                                canvas.width = w * imgWidth / imgHeight;
+                            }
+                        } else {
+                            canvas.width = imgWidth;
+                            canvas.height = imgHeight;
+                            quality = 0.6;
+                        }
+                        ctx.clearRect(0, 0, canvas.width, canvas.height);
+                        ctx.drawImage(this, 0, 0, canvas.width, canvas.height);
+                        var base64 = canvas.toDataURL("image/jpeg", quality); //压缩语句
+                        // 如想确保图片压缩到自己想要的尺寸,如要求在50-150kb之间，请加以下语句，quality初始值根据情况自定
+                        while (base64.length / 1024 > 150) {
+                            quality -= 0.01;
+                            base64 = canvas.toDataURL("image/jpeg", quality);
+                        }
+                        // 防止最后一次压缩低于最低尺寸，只要quality递减合理，无需考虑
+                        while (base64.length / 1024 < 30) {
+                            quality += 0.001;
+                            base64 = canvas.toDataURL("image/jpeg", quality);
+                        }
+                        callback(base64); //必须通过回调函数返回，否则无法及时拿到该值
+                    }
+                },
+                changeFileToBaseURL: function(file, fn) {
+                    // 创建读取文件对象
+                    var fileReader = new FileReader();
+                    //如果file没定义返回null
+                    if (file == undefined) return fn(null);
+                    // 读取file文件,得到的结果为base64位
+                    fileReader.readAsDataURL(file);
+                    fileReader.onload = function() {
+                        // 把读取到的base64
+                        var imgBase64Data = this.result;
+                        fn(imgBase64Data);
+                    }
+                },
+            }
+        })
+    </script>
+</body>
+
+</html>

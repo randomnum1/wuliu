@@ -22,8 +22,8 @@ class CreateAddressTable extends Migration
             $table->string('phone',200)->default("");
             $table->string('email',200)->default("");
             $table->string('province',200)->default("")->comment("省");
-            $table->string('city',200)->default("")->comment("市");
-            $table->string('area',200)->default("")->comment("区");
+            $table->string('city',200)->default("")->nullable()->comment("市");
+            $table->string('area',200)->default("")->nullable()->comment("区");
             $table->string('detail',200)->default("")->comment("详细地址");
             $table->string('postcode',20)->default("")->comment("邮编");
             $table->string('state',200)->default("0")->comment("1为默认地址");

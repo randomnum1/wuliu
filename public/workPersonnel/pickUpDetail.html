@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <!--主要I是强制让文档的宽度与设备宽度保持1:1，最大宽度1.0，禁止屏幕缩放。-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+    <!--这个也是iphone私有标签，允许全屏浏览。-->
+    <meta content="yes" name="apple-mobile-web-app-capable">
+    <!--iphone的私有标签，iphone顶端状态条的样式。-->
+    <meta content="black" name="apple-mobile-web-app-status-bar-style">
+    <!--禁止数字自动识别为电话号码，这个比较有用，因为一串数字在iphone上会显示成蓝色，样式加成别的颜色也是不生效的。-->
+    <meta content="telephone=no" name="format-detection">
+    <!--禁止email识别-->
+    <meta content="email=no" name="format-detection">
+    <title>取件</title>
+    <script src="../static/node_modules/vue/dist/vue.js"></script>
+    <script src="../static/node_modules/axios/dist/axios.js"></script>
+    <script src="../static/js/public.js"></script>
+    <!-- 移动ui -->
+    <link rel="stylesheet" href="https://unpkg.com/mint-ui/lib/style.css">
+    <script src="https://unpkg.com/mint-ui/lib/index.js"></script>
+    <script src="../static/js/public.js"></script>
+    <link rel="stylesheet" href="../static/font/iconfont.css">
+    <link rel="stylesheet" href="../static/css/normalize.css">
+    <link rel="stylesheet" href="../static/css/public.css">
+    <link rel="stylesheet" href="../static/css/appointmentMail.css">
+    <link rel="stylesheet" href="../static/css/workDetail.css">
+</head>
+
+<body>
+    <div class="appointmentMail_wrap" id="appointmentMail_wrap">
+        <div class="content">
+            <div class="sendInfo">
+                <div class="title">寄件人信息</div>
+                <div class="pickUpInfo br5">
+                    <div class="pickUpInfoLi">
+                        <div class="w25 tac">英文名</div>
+                        <div class="w75 tal">
+                            <input type="text" class="oneLine" v-model="mailInfo.a_en_name">
+                        </div>
+                    </div>
+                    <div class="pickUpInfoLi">
+                        <div class="w25 tac">中文名</div>
+                        <div class="w75 tal">
+                            <input type="text" class="oneLine" v-model="mailInfo.a_cn_name">
+                        </div>
+                    </div>
+                    <div class="pickUpInfoLi">
+                        <div class="w25 tac">电话</div>
+                        <div class="w75 tal">
+                            <input type="text" class="oneLine" v-model="mailInfo.a_phone">
+                        </div>
+                    </div>
+                    <div class="pickUpInfoLi">
+                        <div class="w25 tac">城市/区域</div>
+                        <div class="w75 tal">
+                            <input type="text" class="oneLine" v-if="mailInfo.a_country != '中国'" v-model="mailInfo.a_province">
+                            <div class="w100 clearfix" v-if="mailInfo.a_country == '中国'">
+                                <input type="text" class="oneLine w33" v-model="mailInfo.a_province" placeholder="省" style="line-height: 40px;">
+                                <input type="text" class="oneLine w33" v-model="mailInfo.a_city" placeholder="市" style="line-height: 40px;">
+                                <input type="text" class="oneLine w33" v-model="mailInfo.a_area" placeholder="区" style="line-height: 40px;">
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="pickUpInfoLi">
+                        <div class="w25 tac">详细地址</div>
+                        <div class="w75 tal">
+                            <input type="text" class="oneLine" v-model="mailInfo.a_detail">
+                        </div>
+                    </div>
+                    <div class="pickUpInfoLi">
+                        <div class="w25 tac">邮编</div>
+                        <div class="w75 tal">
+                            <input type="text" class="oneLine" v-model="mailInfo.a_postcode">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- TODO:寄存时只存在寄件地址，此处需要后期处理是否选择显示 -->
+            <div class="collectInfo" style="margin-top:10px">
+                <div class="title">收件人信息</div>
+                <div class="pickUpInfo br5">
+                    <div class="pickUpInfoLi">
+                        <div class="w25 tac">英文名</div>
+                        <div class="w75 tal">
+                            <input type="text" class="oneLine" v-model="mailInfo.b_en_name">
+                        </div>
+                    </div>
+                    <div class="pickUpInfoLi">
+                        <div class="w25 tac">中文名</div>
+                        <div class="w75 tal">
+                            <input type="text" class="oneLine" v-model="mailInfo.b_cn_name">
+                        </div>
+                    </div>
+                    <div class="pickUpInfoLi">
+                        <div class="w25 tac">电话</div>
+                        <div class="w75 tal">
+                            <input type="text" class="oneLine" v-model="mailInfo.b_phone">
+                        </div>
+                    </div>
+                    <div class="pickUpInfoLi">
+                        <div class="w25 tac">城市/区域</div>
+                        <div class="w75 tal">
+                            <input type="text" class="oneLine" v-if="mailInfo.b_country != '中国'" v-model="mailInfo.b_province">
+                            <div class="w100 clearfix" v-if="mailInfo.b_country == '中国'">
+                                <input type="text" class="oneLine w33" v-model="mailInfo.b_province" placeholder="省" style="line-height: 40px;">
+                                <input type="text" class="oneLine w33" v-model="mailInfo.b_city" placeholder="市" style="line-height: 40px;">
+                                <input type="text" class="oneLine w33" v-model="mailInfo.b_area" placeholder="区" style="line-height: 40px;">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pickUpInfoLi">
+                        <div class="w25 tac">详细地址</div>
+                        <div class="w75 tal">
+                            <input type="text" class="oneLine" v-model="mailInfo.b_detail">
+                        </div>
+                    </div>
+                    <div class="pickUpInfoLi">
+                        <div class="w25 tac">邮编</div>
+                        <div class="w75 tal">
+                            <input type="text" class="oneLine" v-model="mailInfo.b_postcode">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pickUpInfo br5">
+                <div class="pickUpInfoLi">
+                    <div class="w25 tac">物品信息</div>
+                    <div class="w75 tar" @click.stop="toCheckedthings()">
+                        <div style="width: 100%;height:40px;position: absolute;top: 0;right: 0;background-color: transparent;"></div>
+                        <span class="iconfont icon-arrow-l rightIcon0"></span>
+                        <span v-if="mailInfo.thingsInfo ==''"><input type="text" placeholder="请填写" class="tar"></span>
+                        <span class="oneLine" style="display: block;width: 92%;" v-if="mailInfo.thingsInfo !== ''">{{mailInfo.items}}</span>
+                    </div>
+                </div>
+                <div class="pickUpInfoLi">
+                    <div class="w25 tac">取件方式</div>
+                    <div class="w75" style="padding: 0 5px;box-sizing: border-box;">{{mailInfo.type}}</div>
+                </div>
+                <div class="pickUpInfoLi">
+                    <div class="w25 tac">取件日期</div>
+                    <div class="w75 tar" @click.stop="messageBottomSwitch = true">
+                        <!-- <div style="width: 100%;height:40px;position: absolute;top: 0;right: 0;background-color: transparent;"></div> -->
+                        <span class="iconfont icon-arrow-l rightIcon0"></span>
+                        <input type="text" placeholder="可提前七天预约取件" v-model="mailInfo.date" readonly class="tar oneLine" style="box-sizing: border-box;padding-right: 20px;">
+                    </div>
+                </div>
+            </div>
+            <div class="pickUpInfo br5">
+                <div class="pickUpInfoLi">
+                    <div class="w25 tac">需要包装</div>
+                    <div class="w75">
+                        <mt-switch v-model="mailInfo.packaging"> </mt-switch>
+                        <!-- <div style="width: 100%;height:40px;position: absolute;top: 0;right: 0;background-color: transparent;padding: 0 5px;box-sizing: border-box;">{{mailInfo.packStatus ?'是' : '否'}}</div> -->
+                        <span @click="setMessage('pack','no')" class="iconfont icon-beizhu rightIcon0"></span>
+                    </div>
+                </div>
+                <div class="pickUpInfoLi">
+                    <div class="w25 tac">是否包税</div>
+                    <div class="w75">
+                        <mt-switch v-model="mailInfo.tax"> </mt-switch>
+                        <!-- <div style="width: 100%;height:40px;position: absolute;top: 0;right: 0;background-color: transparent;padding: 0 5px;box-sizing: border-box;">{{mailInfo.taxStatus ?'是' : '否'}}</div> -->
+                        <span @click="setMessage('tax','no')" class="iconfont icon-beizhu rightIcon0"></span>
+                    </div>
+                </div>
+                <div class="pickUpInfoLi">
+                    <div class="w25 tac">备注信息</div>
+                    <div class="w75 tal">
+                        <input type="text" v-model="mailInfo.note" placeholder="无" class="tal oneLine">
+                    </div>
+                </div>
+            </div>
+            <div class="pickUpInfo br5">
+                <div class="pickUpInfoLi">
+                    <div class="w25 tac">取件员</div>
+                    <div class="w75 tal">
+                        <input type="text" v-model="mailInfo.take_user" readonly class="tal oneLine">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="addBtn" v-show="isOriginHei" @click="submit">确定</div>
+        <div class="editAddr_messageBox" v-if="messageBottomSwitch">
+            <div class="areaBox">
+                <div style="position: relative;top: 0;height: 40px;line-height: 40px;font-weight: 550;">取件时间为下午，部分地区支持晚上取件</div>
+                <ul>
+                    <li v-for="(item,index) in mailInfo.dateArr" :class="{active:item.checked}" @click="areaChecked(index)">{{item.date}} <span class="iconfont rightIcon" :class="{'icon-duihao1':item.checked}" style="color: #CC3300;"></span></li>
+                </ul>
+                <div class="addBtn" @click="messageBottomSwitch = false">确认</div>
+            </div>
+        </div>
+        <div class="messageBox" v-if="messageSwitch">
+            <div class="boxContent">
+                <div class="messageTitle">{{message.title}}</div>
+                <div class="messageContent">{{message.content}}</div>
+                <div class="messageBtn" v-if="btnSwitch">
+                    <div class="cancleBtn" @click="messageSwitch = false">取消</div>
+                    <div class="confirmBtn" @click="confirmOperation">确定</div>
+                </div>
+                <div v-if="!btnSwitch" style="width: 100%;line-height: 40px;text-align: center;font-weight: 700;color: #CC3300;position: fixed;bottom: 0;" @click="messageSwitch=false">我知道了</div>
+            </div>
+        </div>
+
+    </div>
+    <script>
+        var vm = new Vue({
+            el: "#appointmentMail_wrap",
+            data: {
+                message: {
+                    title: "",
+                    content: "",
+                    type: ""
+                },
+                messageSwitch: false,
+                btnSwitch: true,
+                messageBottomSwitch: false,
+                mailInfo: {},
+                sendInfo: {},
+                collectInfo: {},
+                screenHeight: document.body.clientHeight, // 这里是给到了一个默认值 （这个很重要），
+                originHeight: document.body.clientHeight, //默认高度在watch里拿来做比较
+                isOriginHei: true,
+                urls: {
+                    // getDataUrl: 'http://10.102.10.33:8002/deposit/pickUpDetail',
+                    getDataUrl: '/manage/take/show',
+                    updateUrl: "/manage/take/update"
+                },
+                searchObj: {}
+            },
+            created: async function() {
+                _this = this;
+                _this.searchObj = await getSearch();
+                _this.urls = await workgetPublicUrl(_this.urls);
+                _this.getData();
+
+            },
+            mounted() {
+                const that = this
+                window.onresize = () => {
+                    return (() => {
+                        window.screenHeight = document.body.clientHeight
+                        that.screenHeight = window.screenHeight
+                    })()
+                }
+            },
+            watch: {
+                screenHeight(val) {
+                    console.log(this.screenHeight)
+                    if (this.originHeight != val) {
+                        this.isOriginHei = false;
+                    } else {
+                        this.isOriginHei = true;
+                    }
+                }
+            },
+            methods: {
+                toCheckedthings() {
+                    var url = "thingsInfo.html"
+                    window.location.href = url;
+                    window.localStorage.setItem("mailInfo", JSON.stringify(this.mailInfo))
+                    window.localStorage.setItem("itemsArr", JSON.stringify(this.mailInfo.itemsArr))
+                },
+                setMessage(type, btn) {
+                    if (type == 'legal') {
+                        this.message.title = "法律免责声明";
+                        this.message.content = this.mailInfo.legalDescription;
+                    }
+                    if (type == 'pack') {
+                        this.message.title = "包装说明";
+                        this.message.content = this.mailInfo.packRemarks;
+                    }
+                    if (type == 'tax') {
+                        this.message.title = "包税说明";
+                        this.message.content = this.mailInfo.taxRemarks;
+                    }
+                    if (type == 'charge') {
+                        this.message.title = "收费说明";
+                        this.message.content = this.mailInfo.chargeStandard;
+                    }
+                    if (btn == 'no') {
+                        this.btnSwitch = false;
+                    }
+                    this.messageSwitch = true;
+                },
+                getLocalData() { //获取localStorage数据
+                    judgeEquipment()
+                    if (window.localStorage.getItem('mailInfo')) {
+                        var obj = JSON.parse(window.localStorage.getItem('mailInfo'));
+                        for (key in obj) {
+                            this.mailInfo[key] = obj[key]
+                        }
+                    }
+                    if (window.localStorage.getItem('submitThings')) {
+                        var obj = JSON.parse(window.localStorage.getItem('submitThings'));
+                        this.mailInfo.itemsArr = [];
+                        this.mailInfo.items = "";
+                        for (key in obj) {
+                            let newobj = {};
+                            newobj = obj[key];
+                            if (Number(newobj.number) !== 0) {
+                                this.mailInfo.itemsArr.push(newobj);
+                                this.mailInfo.items += newobj['sort'] + newobj['number'] + '，'
+                            }
+                        }
+                        this.mailInfo.items = this.mailInfo.items.slice(0, this.mailInfo.items.length - 1)
+
+                    }
+                },
+                areaChecked(index) {
+                    this.mailInfo.dateArr.forEach(element => {
+                        element.checked = false;
+                    });
+                    this.mailInfo.dateArr[index].checked = true;
+                    this.mailInfo.date = this.mailInfo.dateArr[index].date;
+                },
+                submit() {
+                    var _this = this;
+                    _this.mailInfo.packaging = _this.mailInfo.packaging ? 1 : 0;
+                    _this.mailInfo.tax = _this.mailInfo.tax ? 1 : 0;
+                    var submitObj = {}
+                    for (key in _this.mailInfo) {
+                        if (key == 'items' || key == 'dateArr' || key == 'a_country' || key == 'b_country') {
+                            continue;
+                        }
+                        submitObj[key] = _this.mailInfo[key];
+                    }
+                    if (submitObj.date == '') {
+                        alert("请选择取件日期");
+                        return;
+                    } else if (submitObj.itemsArr.length == 0) {
+                        alert("请填写物品信息");
+                        return;
+                    }
+                    axios({
+                            method: 'post',
+                            url: _this.urls.updateUrl,
+                            withCredentials: true,
+                            data: submitObj
+                        })
+                        .then(res => {
+                            if (res.status == 200) {
+                                window.location.href = "pickUpList.html"
+                                window.localStorage.clear();
+                            }
+                        })
+                        .catch(function(error) {
+                            // handle error
+                            if (error.response.status == 422) {
+                                // console.log("用户名或者密码错误！");
+                                alert("参数错误")
+                            }
+                            if (err.response.status == 400) {
+                                alert("登录过期请重新登录")
+                                window.location.href = 'login.html'
+                            }
+                        })
+                },
+                getData() {
+                    var _this = this;
+                    axios({
+                            method: 'post',
+                            url: _this.urls.getDataUrl,
+                            withCredentials: true,
+                            data: {
+                                number: _this.searchObj.id
+                            }
+                        })
+                        .then(res => {
+                            if (res.status == 200) {
+                                _this.mailInfo = res.data;
+                                _this.mailInfo.packaging = res.data.packaging == 1 ? true : false;
+                                _this.mailInfo.tax = res.data.tax == 1 ? true : false;
+                                _this.mailInfo.dateArr = res.data.dateArr;
+                                _this.mailInfo.dateArr.forEach((el, index) => {
+                                    el.checked = false;
+                                })
+                                _this.getLocalData()
+                            }
+
+                        })
+                        .catch(function(error) {
+                            // handle error
+                            if (error.response.status == 422) {
+                                // console.log("用户名或者密码错误！");
+                                alert("参数错误")
+                            }
+                            if (err.response.status == 400) {
+                                alert("登录过期请重新登录")
+                                window.location.href = 'login.html'
+                            }
+                        })
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>

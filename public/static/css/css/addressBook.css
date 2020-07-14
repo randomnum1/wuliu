@@ -1,0 +1,203 @@
+html,
+body {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    float: left;
+    background-color: #F4F4F4;
+    font-size: 14px;
+}
+
+.addressBook_wrap {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    float: left;
+}
+
+
+/* 搜索 */
+
+.searchBtn {
+    width: 100%;
+    height: 50px;
+    position: relative;
+    float: left;
+    background-color: #fff;
+    font-size: 12px;
+}
+
+
+/* 地址列表 */
+
+.addressList {
+    width: 100%;
+    height: 500px;
+    position: relative;
+    float: left;
+}
+
+.addressLi {
+    width: 96%;
+    height: auto;
+    position: relative;
+    float: left;
+    background-color: #fff;
+    margin: 10px 2% 0px;
+    border-radius: 5px;
+    padding: 10px 10px 5px;
+    box-sizing: border-box;
+}
+
+.userInfo {
+    width: 100%;
+    height: 30px;
+    line-height: 30px;
+    position: relative;
+    float: left;
+}
+
+.userAddr {
+    width: 100%;
+    line-height: 25px;
+    position: relative;
+    float: left;
+    font-size: 12px;
+    color: #999;
+    border-bottom: 1px solid #f2f2f2;
+    box-sizing: border-box;
+}
+
+.operationBtn {
+    width: 100%;
+    height: 30px;
+    line-height: 30px;
+    position: relative;
+    float: left;
+    color: #666;
+}
+
+.editBtn.iconfont {
+    padding: 0 10px;
+    box-sizing: border-box;
+    float: right;
+    font-size: 13px;
+}
+
+.bottomModule {
+    width: 100%;
+    height: 80px;
+    position: fixed;
+    bottom: 0;
+    background-color: #fff;
+}
+
+.submitOrder {
+    width: 80%;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #D23146;
+    color: #fff;
+    border-radius: 20px;
+}
+
+
+/* 弹框样式 */
+
+.messageBox {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    float: left;
+    background-color: rgba(0, 0, 0, .4);
+    z-index: 100;
+}
+
+.messageBoxCom {
+    width: 80%;
+    height: auto;
+    position: relative;
+    float: left;
+    left: 50%;
+    top: 40%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    border-radius: 5px;
+}
+
+.messageTitle {
+    width: 100%;
+    line-height: 40px;
+    font-weight: 700;
+    position: relative;
+    float: left;
+    text-align: center;
+    color: #333;
+}
+
+.messageCom {
+    width: 100%;
+    line-height: 30px;
+    text-align: center;
+    color: #999;
+    padding: 5px 10px 10px;
+    box-sizing: border-box;
+}
+
+.messageBtns {
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    position: relative;
+    float: left;
+    border-top: 1px solid #f2f2f2;
+    box-sizing: border-box;
+}
+
+.messageBtn {
+    width: 50%;
+    position: relative;
+    float: left;
+}
+
+.messageBtn:last-child {
+    height: 39px;
+    border-left: 1px solid #f2f2f2;
+    box-sizing: border-box;
+    color: #26a2ff;
+}
+
+
+/* 修改UI组件中样式 */
+
+.mint-searchbar {
+    background-color: #fff;
+}
+
+.mint-searchbar-inner {
+    border-radius: 20px;
+    background-color: #f4f4f4;
+}
+
+.mint-searchbar-inner .mintui-search {
+    font-size: 16px;
+    position: absolute;
+    right: 20px;
+    color: #999;
+}
+
+.mint-searchbar-core {
+    background-color: #f4f4f4;
+}
+
+.mint-searchbar-cancel {
+    display: none;
+}

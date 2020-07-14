@@ -80,6 +80,12 @@ Route::group(['prefix' => 'admin','middleware' => 'log'], function (){
         });
 
         Route::group(['middleware' => 'can:system'], function(){
+            //仓库列表
+            Route::get('/system/warehouse', '\App\Admin\Controllers\SystemController@warehouse');
+            Route::post('/system/warehouse/delete', '\App\Admin\Controllers\SystemController@delete');
+            Route::post('/system/warehouse/warehouse_add', '\App\Admin\Controllers\SystemController@warehouse_add');
+            Route::post('/system/warehouse/location_add', '\App\Admin\Controllers\SystemController@location_add');
+            Route::post('/system/warehouse/location_update', '\App\Admin\Controllers\SystemController@location_update');
             //日志列表
             Route::get('/system/log', '\App\Admin\Controllers\SystemController@log');
             //日期列表
@@ -91,7 +97,28 @@ Route::group(['prefix' => 'admin','middleware' => 'log'], function (){
         });
 
         Route::group(['middleware' => 'can:mails'], function(){
-
+            //全部邮寄订单页面
+            Route::get('/mails/all', '\App\Admin\Controllers\MailsController@all');
+            //待核价订单页面
+            Route::get('/mails/check', '\App\Admin\Controllers\MailsController@check');
+            //待付款订单页面
+            Route::get('/mails/pay', '\App\Admin\Controllers\MailsController@pay');
+            //待确认订单页面
+            Route::get('/mails/confirm', '\App\Admin\Controllers\MailsController@confirm');
+            //订单详情页面
+            Route::get('/mails/{mails}/show', '\App\Admin\Controllers\MailsController@show');
+            //核价详情页面
+            Route::get('/mails/{mails}/check_show', '\App\Admin\Controllers\MailsController@check_show');
+            //获取物品信息接口
+            Route::post('/mails/get_items', '\App\Admin\Controllers\MailsController@get_items');
+            //核价详情逻辑
+            Route::post('/mails/check_update', '\App\Admin\Controllers\MailsController@check_update');
+            //确认详情页面
+            Route::get('/mails/{mails}/confirm_show', '\App\Admin\Controllers\MailsController@confirm_show');
+            //确认详情逻辑
+            Route::post('/mails/confirm_update', '\App\Admin\Controllers\MailsController@confirm_update');
+            //订单导出
+            Route::get('/mails/export', '\App\Admin\Controllers\MailsController@export');
         });
 
     });

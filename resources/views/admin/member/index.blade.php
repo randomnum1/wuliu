@@ -39,7 +39,7 @@
                         <td><label><input type="checkbox" class="ace"><span class="lbl"></span></label></td>
                         <td>{{$user->id}}</td>
                         <td>{{$user->nickname}}</td>
-                        <td>{{$user->head}}</td>
+                        <td><img src="{{$user->head}}" style="width: 60px;" /></td>
                         <td>{{$user->score}}</td>
                         <td>{{$user->created_at}}</td>
                         <td>{{$user->updated_at}}</td>

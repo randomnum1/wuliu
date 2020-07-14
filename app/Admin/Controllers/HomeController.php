@@ -3,6 +3,7 @@
 namespace App\Admin\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
@@ -17,7 +18,10 @@ class HomeController extends Controller
     //首页右侧
     public function home()
     {
-        return view('admin.home.home');
+        $userNumber = DB::table('users')->count();
+        $orderNumber = DB::table('mails')->count();
+        $orderMoney = DB::table('mails')->sum('money');
+        return view('admin.home.home',compact('userNumber','orderNumber','orderMoney'));
     }
 
 }

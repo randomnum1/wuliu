@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <!--主要I是强制让文档的宽度与设备宽度保持1:1，最大宽度1.0，禁止屏幕缩放。-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+    <!--这个也是iphone私有标签，允许全屏浏览。-->
+    <meta content="yes" name="apple-mobile-web-app-capable">
+    <!--iphone的私有标签，iphone顶端状态条的样式。-->
+    <meta content="black" name="apple-mobile-web-app-status-bar-style">
+    <!--禁止数字自动识别为电话号码，这个比较有用，因为一串数字在iphone上会显示成蓝色，样式加成别的颜色也是不生效的。-->
+    <meta content="telephone=no" name="format-detection">
+    <!--禁止email识别-->
+    <meta content="email=no" name="format-detection">
+    <title>运单详情</title>
+    <script src="../static/node_modules/vue/dist/vue.js"></script>
+    <script src="../static/node_modules/axios/dist/axios.js"></script>
+    <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+    <!-- 移动ui -->
+    <link rel="stylesheet" href="https://unpkg.com/mint-ui/lib/style.css">
+    <script src="https://unpkg.com/mint-ui/lib/index.js"></script>
+    <script src="../static/js/public.js"></script>
+    <link rel="stylesheet" href="../static/font/iconfont.css">
+    <link rel="stylesheet" href="../static/css/normalize.css">
+    <link rel="stylesheet" href="../static/css/public.css">
+    <link rel="stylesheet" href="../static/css/appointmentMail.css">
+    <style>
+        .basicInfo_userInfo {
+            width: 90%;
+            height: 100%;
+            position: relative;
+            float: left;
+            border-right: none;
+        }
+        
+        .pickUpInfo tr {
+            line-height: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="appointmentMail_wrap" id="appointmentMail_wrap">
+        <div class="content">
+            <div class="basicInfo br5">
+                <div style="float:left;width: 10%;text-align: center;height: 100%;line-height: 90px;color: #c30;font-size: 18px;">寄
+                </div>
+                <div class="basicInfo_userInfo">
+                    <div style="padding: 0 5px;box-sizing: border-box;">
+                        <div class="w100" style="font-weight: 700;line-height: 30px;">
+                            <div class="w30 oneLine">{{sendInfo.cn_name}}</div>
+                            <div class="w70 oneLine">{{sendInfo.phone}}</div>
+                        </div>
+                        <div class="w100 multiLine2" style="line-height:20px;height: 40px;">
+                            {{sendInfo.address }}
+                        </div>
+                        <div class="w100" style="line-height: 20px;">
+                            <div class="w30 oneLine">{{sendInfo.postcode}}</div>
+                            <div class="w70 oneLine">{{sendInfo.email}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="basicInfo br5">
+                <div style="float:left;width: 10%;text-align: center;height: 100%;line-height: 90px;color: #666;font-size: 18px;">收
+                </div>
+                <div class="basicInfo_userInfo">
+                    <!-- <div v-if="JSON.stringify(mailInfo.collectInfo) == '{}'" style="line-height: 90px;color:#666">收件人信息
+                    </div> -->
+                    <div style="padding: 0 5px;box-sizing: border-box;">
+                        <div class="w100" style="font-weight: 700;line-height: 30px;">
+                            <div class="w30 oneLine">{{collectInfo.cn_name}}</div>
+                            <div class="w70 oneLine">{{collectInfo.phone}}</div>
+                        </div>
+                        <div class="w100 multiLine2" style="line-height:20px;height: 40px;">
+                            {{collectInfo.address}}
+                        </div>
+                        <div class="w100" style="line-height: 20px;">
+                            <div class="w30 oneLine">{{collectInfo.postcode}}</div>
+                            <div class="w70 oneLine">{{collectInfo.email}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pickUpInfo br5" style="padding: 0;">
+                <div style="width: 100%;height: 40px;line-height: 40px;padding: 0 10px;box-sizing: border-box;border-bottom: 1px solid #eee;">订单类型：{{mailInfo.type}}</div>
+                <div class="w100" style="padding: 5px 20px;box-sizing: border-box;">
+                    <table border="0" class="w100">
+                        <tr class="w100">
+                            <th v-for="item in tableTh" class="w20 tal">{{item.label}}</th>
+                        </tr>
+                        <tr v-for="item in tableTd" class="w100">
+                            <td v-for="it in item" class="w20 tal">{{it}}</td>
+                        </tr>
+                    </table>
+                </div>
+                <div style="width: 100%;height: 30px;line-height: 30px;box-sizing: border-box;border-top: 1px solid #eee;padding: 0 20px 0 10px ;"><span class="w25"> 费用合计：</span><span class="w20 rightIcon20"> {{sumCost}}</span></div>
+            </div>
+            <div class="pickUpInfo br5 clearfix" style="padding: 0;background-color: #fff" v-if="mailInfo.proof">
+                <div style="width: 100%;height: 40px;line-height: 40px;padding: 0 10px;box-sizing: border-box;border-bottom: 1px solid #eee;float: left;">付款凭证</div>
+                <div class="w100" style="height: 100px; float: left;">
+                    <img :src="img" v-for="(img,i) in mailInfo.proof" :class="{mgl:i>0}" style="width: 80px;height: 80px;float: left;border: 1px solid #eee;box-sizing: border-box;margin: 10px 5px;" alt="" @click="bigImg(mailInfo.proof,img)">
+                </div>
+            </div>
+            <div class="pickUpInfo br5 clearfix" style="padding: 0;background-color: #fff" v-if="mailInfo.issue">
+                <div style="width: 100%;height: 40px;line-height: 40px;padding: 0 10px;box-sizing: border-box;border-bottom: 1px solid #eee;float: left;">邮寄图片</div>
+                <div class="w100" style="height: 100px; float: left;">
+                    <img :src="img" v-for="(img,i) in mailInfo.issue" :class="{mgl:i>0}" style="width: 80px;height: 80px;float: left;border: 1px solid #eee;box-sizing: border-box;margin: 10px 5px;" alt="" @click="bigImg(mailInfo.issue,img)">
+                </div>
+            </div>
+
+        </div>
+        <div class="addBtn" @click="submit" v-if="mailInfo.pay">
+            <span>去付款</span>
+        </div>
+        <div class="addBtn" @click="submit" v-if="mailInfo.pay_update">
+            <span>修改凭证</span>
+        </div>
+    </div>
+    <script>
+        var vm = new Vue({
+            el: "#appointmentMail_wrap",
+            data: {
+                sendInfo: {},
+                collectInfo: {},
+                mailInfo: {},
+                searchObj: {},
+                urls: {
+                    getDataUrl: "http://10.102.10.33:8002/deposit/getWaybillDetail"
+                },
+                tableTh: [{
+                    prop: "goods",
+                    label: "物品"
+                }, {
+                    prop: "num",
+                    label: "数量"
+                }, {
+                    prop: "weight",
+                    label: "重量"
+                }, {
+                    prop: "cost",
+                    label: "费用"
+                }],
+                tableTd: [],
+                sumCost: 0
+            },
+            created: async function() {
+                _this = this;
+                _this.searchObj = await getSearch();
+                // _this.urls = await workgetPublicUrl(_this.urls);
+                _this.getData();
+            },
+            methods: {
+                submit() {
+                    let url = "payDetail.html";
+                    window.location.href = url + "?id=" + this.mailInfo.number + "&payNum=" + this.sumCost + "&status=" + this.mailInfo.pay_update;
+                },
+                bigImg(imgArr, currentImg) {
+                    WeixinJSBridge.invoke("imagePreview", {
+                        "urls": imgArr,
+                        "current": currentImg
+                    });
+                },
+                getData() {
+                    var _this = this;
+                    _this.mailInfo = JSON.parse(window.localStorage.getItem('detailData'));
+                    _this.sendInfo = _this.mailInfo.address[0];
+                    _this.collectInfo = _this.mailInfo.address[1];
+                    _this.tableTd = _this.mailInfo.items;
+                    _this.mailInfo.proof = _this.mailInfo.proof;
+                    _this.sumCost = _this.mailInfo.total_money ? _this.mailInfo.total_money : 0;
+                    // if (_this.mailInfo.proof && _this.mailInfo.proof.length > 0) {
+                    //     _this.mailInfo.proof = _this.mailInfo.proof.filter((el) => {
+                    //         if (!el) {
+                    //             return el;
+                    //         }
+                    //     })
+                    // }
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>

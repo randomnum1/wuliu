@@ -1,0 +1,154 @@
+.appointmentMail_wrap {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    background-color: #eee;
+    float: left;
+    /* padding: 0 0 50px 0; */
+    box-sizing: border-box;
+    font-size: 14px;
+    overflow: hidden;
+}
+
+.content {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: auto;
+    padding-bottom: 50px;
+    box-sizing: border-box;
+}
+
+.basicInfo {
+    width: 100%;
+    height: 100px;
+    position: relative;
+    margin: 5px auto 0;
+    background-color: #fff;
+    padding: 5px;
+    box-sizing: border-box;
+}
+
+.basicInfo:nth-child(1) {
+    margin-top: 0;
+}
+
+.basicInfo_userInfo>div {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.basicInfo_userInfo1 {
+    width: 90%;
+    height: 100%;
+    position: relative;
+    float: left;
+}
+
+.basicInfo_userInfo {
+    width: 70%;
+    height: 100%;
+    position: relative;
+    float: left;
+    border-right: 1px solid #eee;
+}
+
+.basicInfo_addr {
+    width: 18%;
+    height: 100%;
+    position: relative;
+    float: left;
+    text-align: center;
+    line-height: 90px;
+    color: #666;
+}
+
+.pickUpInfo {
+    width: 100%;
+    height: auto;
+    position: relative;
+    margin: 5px auto 0;
+    background-color: #fff;
+    padding: 0 5px;
+    box-sizing: border-box;
+}
+
+.pickUpInfoLi {
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    position: relative;
+    box-sizing: border-box;
+    border-bottom: 1px solid #eee;
+}
+
+.pickUpInfoLi span {
+    display: inline-block;
+}
+
+.pickUpInfoLi:last-child {
+    border-bottom: none;
+}
+
+.pickUpInfoLi input {
+    width: 90%;
+}
+
+.editAddr_messageBox {
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    height: 100%;
+    background-color: rgba(0, 0, 0, .3);
+}
+
+.editAddr_messageBox .areaBox {
+    width: 100%;
+    height: 300px;
+    line-height: 40px;
+    text-align: center;
+    background-color: #fff;
+    border-radius: 5px 5px 0 0;
+    position: absolute;
+    bottom: 0;
+}
+
+.areaBox ul {
+    width: 100%;
+    height: 100%;
+}
+
+.areaBox li {
+    line-height: 30px;
+}
+
+.pickUpCode img {
+    width: auto;
+    height: 100%;
+    position: relative;
+    vertical-align: middle;
+    background-color: #fff;
+}
+
+.uploadImg {
+    width: 100%;
+    height: auto;
+    min-height: 40px;
+    line-height: 40px;
+    position: relative;
+    box-sizing: border-box;
+    border-bottom: 1px solid #eee;
+}
+
+.uploadImg span {
+    display: inline-block;
+}
+
+.uploadImg:last-child {
+    border-bottom: none;
+}
+
+.uploadImg input {
+    width: 90%;
+}

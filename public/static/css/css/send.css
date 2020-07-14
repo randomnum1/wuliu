@@ -1,0 +1,302 @@
+html,
+body {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    float: left;
+    background-color: #F4F4F4;
+    font-size: 14px;
+}
+
+.send_wrap {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    float: left;
+}
+
+.addrCommon {
+    width: 98%;
+    height: 180px;
+    position: relative;
+    float: left;
+    background-color: #fff;
+    margin: 10px 1% 0;
+    border-radius: 5px;
+}
+
+.leftIcon {
+    width: 15%;
+    height: 100%;
+    position: relative;
+    float: left;
+}
+
+.send {
+    width: 85%;
+    height: 50%;
+    position: relative;
+    float: left;
+    border-bottom: 1px solid #f2f2f2;
+    box-sizing: border-box;
+}
+
+.leftInfo {
+    width: 80%;
+    max-height: 85%;
+    position: relative;
+    float: left;
+    margin-top: 5%;
+    box-sizing: border-box;
+}
+
+.sendInfo {
+    width: 100%;
+    height: 30px;
+    line-height: 30px;
+    position: relative;
+    float: left;
+    font-weight: 700;
+    padding: 0 5px;
+    box-sizing: border-box;
+    /* 限制行数 */
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
+}
+
+.sendAddr {
+    width: 100%;
+    line-height: 18px;
+    position: relative;
+    float: left;
+    color: #ccc;
+    padding: 0 5px;
+    box-sizing: border-box;
+    /* 限制行数 */
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+}
+
+.line {
+    width: 0;
+    border-left: 1px solid #ccc;
+    height: 60%;
+    position: relative;
+    float: left;
+    top: 50%;
+    box-sizing: border-box;
+    transform: translateY(-50%);
+}
+
+.rightAddressBook {
+    width: 19.5%;
+    height: 100%;
+    font-size: 12px;
+    position: relative;
+    float: left;
+    text-align: center;
+}
+
+.receipt {
+    width: 85%;
+    height: 50%;
+    position: relative;
+    float: left;
+}
+
+
+/* 附加模块 */
+
+.additional {
+    width: 98%;
+    height: auto;
+    position: relative;
+    float: left;
+    background-color: #fff;
+    border-radius: 5px;
+    margin: 10px 1% 0;
+}
+
+
+/* 取件时间 */
+
+.additionalLi {
+    width: 94%;
+    height: 40px;
+    line-height: 40px;
+    position: relative;
+    float: left;
+    border-bottom: 1px solid #f2f2f2;
+    margin: 0 3%;
+    color: #666;
+}
+
+.additionalLi:last-child {
+    border: none;
+}
+
+.moduleLable {
+    width: 40%;
+    height: 100%;
+    position: relative;
+    float: left;
+}
+
+.moduleBtn {
+    width: auto;
+    height: 100%;
+    position: relative;
+    float: right;
+    color: #333;
+}
+
+
+/* 下单模块 */
+
+.bottomModule {
+    width: 100%;
+    height: 80px;
+    position: fixed;
+    bottom: 0;
+    background-color: #fff;
+}
+
+.leftSet {
+    width: 50%;
+    height: 100%;
+    position: relative;
+    float: left;
+}
+
+.submitOrder {
+    width: 30%;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    position: absolute;
+    top: 50%;
+    left: 80%;
+    transform: translate(-50%, -50%);
+    background-color: #D23146;
+    color: #fff;
+    border-radius: 20px;
+}
+
+
+/* 上门时间选择 */
+
+.timeCheck {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    float: left;
+    background-color: rgba(0, 0, 0, .4);
+}
+
+.timeCheck_wrap {
+    width: 100%;
+    height: 40%;
+    position: absolute;
+    bottom: 0;
+    float: left;
+    background-color: #fff;
+}
+
+.timeCheck_wrap .date {
+    width: 40%;
+    height: 100%;
+    position: relative;
+    float: left;
+    background-color: #f2f2f2;
+    padding: 0;
+    margin: 0;
+    overflow: auto;
+}
+
+.timeCheck_wrap .date li {
+    width: 100%;
+    line-height: 40px;
+    text-align: center;
+    position: relative;
+    float: left;
+}
+
+.dateLiActive {
+    background-color: #fff;
+}
+
+.timeLiActive {
+    color: #D23146;
+}
+
+.timeCheck_wrap .timeChecked li.db {
+    display: block;
+}
+
+.timeCheck_wrap .timeChecked {
+    width: 60%;
+    height: 100%;
+    position: relative;
+    float: left;
+    line-height: 30px;
+    padding: 0;
+    margin: 0;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.timeCheck_wrap .timeChecked li {
+    width: 100%;
+    height: 100%;
+    line-height: 30px;
+    position: absolute;
+    top: 0;
+    display: none;
+    padding: 0;
+    margin: 0;
+    overflow: auto;
+}
+
+.timeCom {
+    height: 70%;
+    width: 100%;
+    position: relative;
+    float: left;
+}
+
+.confirmBtn {
+    width: 70%;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    position: absolute;
+    bottom: 10px;
+    background-color: #D23146;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 20px;
+    color: #fff;
+}
+
+
+/* 修改UI组件中样式 */
+
+.moduleBtn .mint-switch {
+    margin: 10px 0;
+}
+
+.mint-switch-core {
+    height: 20px;
+    width: 40px;
+    border-radius: 20px;
+}
+
+.mint-switch-core::after,
+.mint-switch-core::before {
+    width: 19px;
+    height: 19px;
+}

@@ -144,7 +144,7 @@
                     </ul>
                 </li>
 
-                <li class="purple">
+<!--                 <li class="purple">
                     <a data-toggle="dropdown" class="dropdown-toggle" href="#"><i class="icon-bell-alt"></i><span class="badge badge-important">8</span></a>
                     <ul class="pull-right dropdown-navbar navbar-pink dropdown-menu dropdown-caret dropdown-close">
                         <li class="dropdown-header"><i class="icon-warning-sign"></i>8条通知</li>
@@ -194,7 +194,7 @@
                             </a>
                         </li>
                     </ul>
-                </li>
+                </li> -->
 
             </ul>
         </div>

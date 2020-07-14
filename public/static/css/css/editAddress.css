@@ -1,0 +1,134 @@
+html,
+body {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    float: left;
+    background-color: #F4F4F4;
+    font-size: 14px;
+}
+
+.editAddress_wrap {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    float: left;
+}
+
+.addrUserInfo {
+    width: 100%;
+    height: auto;
+    position: relative;
+    float: left;
+    background-color: #fff;
+}
+
+.infoCom {
+    width: 100%;
+    height: auto;
+    position: relative;
+    float: left;
+    font-size: 12px;
+    padding: 0 20px 10px;
+    box-sizing: border-box;
+}
+
+.infoCom label {
+    width: 100%;
+    height: auto;
+    position: relative;
+    line-height: 30px;
+    float: left;
+}
+
+.infoCom label span {
+    position: absolute;
+    right: 5px;
+}
+
+.infoCom input {
+    line-height: 30px;
+    width: 100%;
+    float: left;
+    position: relative;
+    border: none;
+    color: #333;
+    border-bottom: 1px solid #f2f2f2;
+    margin-right: 5px;
+    padding-right: 20px;
+    box-sizing: border-box;
+    text-overflow: ellipsis;
+}
+
+.infoCom input:focus {
+    outline: -webkit-focus-ring-color auto 0px;
+}
+
+
+/* .infoCom input:first-child,
+.infoCom input:nth-child(2) {
+    min-width: 40%;
+} */
+
+.bottomModule {
+    width: 100%;
+    height: 80px;
+    position: fixed;
+    bottom: 0;
+    background-color: #fff;
+}
+
+.submitOrder {
+    width: 80%;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #D23146;
+    color: #fff;
+    border-radius: 20px;
+}
+
+.infoTitle {
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    position: relative;
+    float: left;
+    font-weight: 700;
+    padding: 0 20px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+
+/* 地址选择框 */
+
+.addressCheckBox {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    background-color: rgba(0, 0, 0, .4);
+    z-index: 100;
+}
+
+.addressCom {
+    width: 100%;
+    height: 75%;
+    position: absolute;
+    bottom: 0;
+    background-color: #fff;
+}
+
+.mint-cell {
+    min-height: 30px;
+    line-height: 30px;
+}
+
+.mint-field .mint-cell-title {
+    width: 20%;
+}

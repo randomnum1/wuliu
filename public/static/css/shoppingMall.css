@@ -1,0 +1,152 @@
+.shoppingMall_wrap {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    background-color: #eee;
+}
+
+.billSearch {
+    width: 100%;
+    height: 50px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 200;
+    background-color: #eee;
+}
+
+.billSearch .searchInput {
+    width: 80%;
+    height: 30px;
+    position: relative;
+    margin: 10px;
+    border-radius: 5px;
+    background-color: #fff;
+    float: left;
+    line-height: 30px;
+    padding: 0 5px;
+}
+
+.billSearch .searchInput input {
+    width: 90%;
+    height: 100%;
+}
+
+.billSearch .searchBtn {
+    width: 15%;
+    position: absolute;
+    right: 0;
+    height: 100%;
+    text-align: center;
+    line-height: 50px;
+    float: left;
+}
+
+.shoppingMall_Con {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    padding-top: 50px;
+    box-sizing: border-box;
+}
+
+.Con_left {
+    height: 100%;
+    background-color: #eee;
+}
+
+.Con_left ul {
+    width: 100%;
+    height: auto;
+    position: relative;
+}
+
+.Con_left ul li {
+    height: 40px;
+    line-height: 40px;
+    position: relative;
+    border-bottom: 1px solid #fff;
+    text-align: center;
+}
+
+.Con_right {
+    height: 100%;
+    background-color: #fff;
+    padding-bottom: 50px;
+    box-sizing: border-box;
+}
+
+.Con_right ul {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.Con_right ul li {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    padding: 5px;
+    box-sizing: border-box;
+}
+
+.liActive {
+    background-color: #fff;
+}
+
+.shopsLi {
+    width: 100%;
+    height: 80px;
+    position: relative;
+}
+
+.shopsLi .liImg {
+    width: 70px;
+    height: 70px;
+    position: absolute;
+    top: 5px;
+    left: 0;
+    line-height: 70px;
+    /* border: 1px solid #eee; */
+    /* background-color: #09d; */
+}
+
+.shopsLi .liImg img {
+    width: 70px;
+    height: 100%;
+    display: inline-block;
+    vertical-align: middle;
+    object-fit: cover;
+}
+
+.shopsLi .li_right {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    padding: 5px 0;
+    padding-left: 80px;
+    box-sizing: border-box;
+}
+
+.shopsLi .li_right .shopTitle {
+    width: 100%;
+    line-height: 20px;
+}
+
+.shopsLi .li_right .liBtn {
+    padding: 3px 5px;
+    box-sizing: border-box;
+    border: 1px solid #c30;
+    position: absolute;
+    right: 5px;
+    bottom: 5px;
+}
+
+.shopCartBtn {
+    width: 100%;
+    height: 50px;
+    position: absolute;
+    bottom: 0;
+    border-top: 1pa solid #ccc;
+    background-color: #c30;
+}

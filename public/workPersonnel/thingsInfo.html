@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <!--主要I是强制让文档的宽度与设备宽度保持1:1，最大宽度1.0，禁止屏幕缩放。-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+    <!--这个也是iphone私有标签，允许全屏浏览。-->
+    <meta content="yes" name="apple-mobile-web-app-capable">
+    <!--iphone的私有标签，iphone顶端状态条的样式。-->
+    <meta content="black" name="apple-mobile-web-app-status-bar-style">
+    <!--禁止数字自动识别为电话号码，这个比较有用，因为一串数字在iphone上会显示成蓝色，样式加成别的颜色也是不生效的。-->
+    <meta content="telephone=no" name="format-detection">
+    <!--禁止email识别-->
+    <meta content="email=no" name="format-detection">
+    <title>物品信息</title>
+    <script src="../static/node_modules/vue/dist/vue.js"></script>
+    <script src="../static/node_modules/axios/dist/axios.js"></script>
+    <!-- 移动ui -->
+    <link rel="stylesheet" href="https://unpkg.com/mint-ui/lib/style.css">
+    <script src="https://unpkg.com/mint-ui/lib/index.js"></script>
+    <link rel="stylesheet" href="../static/font/iconfont.css">
+    <link rel="stylesheet" href="../static/css/normalize.css">
+    <link rel="stylesheet" href="../static/css/public.css">
+    <link rel="stylesheet" href="../static/css/thingsInfo.css">
+</head>
+
+<body>
+    <div class="thingsInfo_wrap" id="thingsInfo_wrap">
+        <div class="content">
+            <div class="contentTitle">物品信息</div>
+            <div class="textItem br5">
+                <div class="w25 tac">纸箱</div>
+                <div class="w75 tar plusReduce">
+                    <span class="iconfont icon-jianhao" @click="reduce('boxNum')"></span>
+                    <span><input type="number"  class="tac" v-model="thingsInfo.boxNum"></span>
+                    <span class="iconfont icon-jiahao1" @click="plus('boxNum')"></span>
+                </div>
+            </div>
+            <div class="textItem br5">
+                <div class="w25 tac">行李箱</div>
+                <div class="w75 tar plusReduce">
+                    <span class="iconfont icon-jianhao" @click="reduce('packNum')"></span>
+                    <span><input type="number" v-model="thingsInfo.packNum" class="tac"></span>
+                    <span class="iconfont icon-jiahao1" @click="plus('packNum')"></span>
+                </div>
+            </div>
+            <div class="textItem br5">
+                <div class="w25 tac">其他</div>
+                <div class="w75 tar">
+                    <input type="text" class="oneLine" v-model="thingsInfo.other" placeholder="可填写其他物品说明">
+                </div>
+            </div>
+            <div class="textItem br5">
+                <div class="w25 tac">收费标准</div>
+                <div class="w75 tar" @click="setMessage('charge','no')">
+                    <span>点我查看收费标准</span>
+                    <span class="iconfont icon-arrow-l"></span>
+                </div>
+            </div>
+            <div style="padding-left: 10px;box-sizing: border-box;font-size: 12px;font-weight: 550;">请详细填写物品信息，便于后续取件、计费。</div>
+        </div>
+        <div class="addBtn" @click="confirmSubmit" v-show="isOriginHei">确定</div>
+        <div class="messageBox" v-if="messageSwitch">
+            <div class="boxContent">
+                <div class="messageTitle">{{message.title}}</div>
+                <div class="messageContent">{{message.content}}</div>
+                <div class="messageBtn" v-if="btnSwitch">
+                    <div class="cancleBtn" @click="messageSwitch = false">取消</div>
+                    <div class="confirmBtn" @click="confirmOperation">确定</div>
+                </div>
+                <div v-if="!btnSwitch" style="width: 100%;line-height: 40px;text-align: center;font-weight: 700;color: #CC3300;position: fixed;bottom: 0;" @click="messageSwitch=false">我知道了</div>
+            </div>
+        </div>
+    </div>
+    <script>
+        var vm = new Vue({
+            el: '#thingsInfo_wrap',
+            data: {
+                message: {
+                    title: "提示",
+                    content: "确定执行该操作么？",
+                    type: ""
+                },
+                messageSwitch: false,
+                btnSwitch: true,
+                screenHeight: document.body.clientHeight, // 这里是给到了一个默认值 （这个很重要），
+                originHeight: document.body.clientHeight, //默认高度在watch里拿来做比较
+                isOriginHei: true,
+                thingsInfo: {
+                    boxNum: 0,
+                    packNum: 0,
+                    other: "",
+                    chargeStandard: ""
+                },
+                submitThings: {
+                    box: {
+                        sort: "纸箱",
+                        number: 0
+                    },
+                    pack: {
+                        sort: "行李箱",
+                        number: 0
+                    },
+                    others: {
+                        sort: "其他",
+                        number: ""
+                    }
+                }
+            },
+            created() {
+                // 修改收费标准
+                // if (window.localStorage.getItem('mailInfo')) {
+                //     var obj = JSON.parse(window.localStorage.getItem('mailInfo'));
+                //     this.thingsInfo['chargeStandard'] = obj.chargeStandard;
+                //     console.log(this.thingsInfo['chargeStandard'])
+                // }
+                if (window.localStorage.getItem('thingsInfo')) {
+                    var obj = JSON.parse(window.localStorage.getItem('thingsInfo'));
+                    for (key in obj) {
+                        this.thingsInfo[key] = obj[key]
+                    }
+                }
+                if (window.localStorage.getItem('itemsArr')) {
+                    var arr = JSON.parse(window.localStorage.getItem('itemsArr'));
+                    for (let i = 0; i < arr.length; i++) {
+                        if (arr[i].sort == '纸箱') {
+                            this.thingsInfo.boxNum = Number(arr[i].number)
+                        }
+                        if (arr[i].sort == '行李箱') {
+                            this.thingsInfo.packNum = Number(arr[i].number)
+                        }
+                        if (arr[i].sort == '其他') {
+                            this.thingsInfo.other = arr[i].number
+                        }
+                    }
+                }
+            },
+            mounted() {
+                const that = this
+                window.onresize = () => {
+                    return (() => {
+                        window.screenHeight = document.body.clientHeight
+                        that.screenHeight = window.screenHeight
+                    })()
+                }
+            },
+            watch: {
+                screenHeight(val) {
+                    console.log(this.screenHeight)
+                    if (this.originHeight != val) {
+                        this.isOriginHei = false;
+                    } else {
+                        this.isOriginHei = true;
+                    }
+                }
+            },
+            methods: {
+                setMessage(type, btn) {
+                    if (type == 'charge') {
+                        this.message.title = "收费说明";
+                        this.message.content = this.thingsInfo.chargeStandard;
+                    }
+                    if (btn == 'no') {
+                        this.btnSwitch = false;
+                    }
+                    this.messageSwitch = true;
+                },
+                reduce(item) {
+                    if (this.thingsInfo[item] > 0) {
+                        this.thingsInfo[item]--;
+                    } else {
+                        return
+                    }
+                },
+                plus(item) {
+                    this.thingsInfo[item]++;
+                },
+                confirmSubmit() {
+                    // TODO:用到物品thingsInfo.html页面注意提交时物品信息格式
+                    this.submitThings.box.number = String(this.thingsInfo.boxNum);
+                    this.submitThings.pack.number = String(this.thingsInfo.packNum);
+                    this.submitThings.others.number = String(this.thingsInfo.other);
+                    window.localStorage.setItem('thingsInfo', JSON.stringify(this.thingsInfo));
+                    window.localStorage.setItem('submitThings', JSON.stringify(this.submitThings));
+                    window.history.go(-1);
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>

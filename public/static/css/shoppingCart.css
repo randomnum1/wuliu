@@ -1,0 +1,96 @@
+.shoppingCart_wrap {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+.shoppingCart_title {
+    width: 100%;
+    height: 50px;
+    line-height: 50px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #fff;
+    padding: 0 10px;
+    box-sizing: border-box;
+    border-bottom: 1px solid#ccc;
+    color: #666;
+}
+
+.shoppingCart_Con {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    padding: 50px 0;
+    box-sizing: border-box;
+}
+
+.shoppingCart_Con ul {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.shoppingCart_Con ul li {
+    height: 80px;
+    width: 100%;
+    position: relative;
+    padding: 0 10px;
+    box-sizing: border-box;
+}
+
+.shoppingCart_Con ul li .liImg {
+    width: 70px;
+    height: 70px;
+    position: absolute;
+    top: 5px;
+    left: 10px;
+    line-height: 70px;
+    /* border: 1px solid #eee; */
+    /* background-color: #09d; */
+}
+
+.shoppingCart_Con ul li .liImg img {
+    width: 70px;
+    height: 100%;
+    display: inline-block;
+    vertical-align: middle;
+    object-fit: cover;
+}
+
+.shoppingCart_Con ul li .li_right {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    padding: 5px 0;
+    padding-left: 80px;
+    box-sizing: border-box;
+}
+
+.shoppingCart_Con ul li .li_right .shopTitle {
+    width: 100%;
+    line-height: 20px;
+}
+
+.shoppingCart_Con ul li .li_right .liBtn {
+    padding: 3px 5px;
+    box-sizing: border-box;
+    border: 1px solid #c30;
+    position: absolute;
+    right: 5px;
+    bottom: 5px;
+}
+
+.shoppingCart_settlement {
+    height: 50px;
+    width: 100%;
+    line-height: 50px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    padding-left: 10px;
+    box-sizing: border-box;
+    border-top: 1px solid #eee;
+}

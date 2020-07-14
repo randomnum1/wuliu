@@ -6,6 +6,7 @@ use App\Events\MessageExecuted;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Http\Controllers\WechatController;
+use Illuminate\Support\Facades\DB;
 
 class MessageListener
 {
@@ -37,41 +38,44 @@ class MessageListener
         }
 
         //通知取件员
-        $user_openid = $order->user_id;
-        $template_id = "a3Chfg3G2VYYlxqR8TM9bMQbx5cACeyI4RHsMlsnGpk";
-        $first = "您有新的订单";
-        $keyword1 = $orderSort;
-        $keyword2 = $order->date;
-        $remark = "请尽快处理!";
-        $url = "http://miyacloud.cn/yz/html/index.html";
+        $manageOpenid = DB::table('admin_users')->select('openid')->get()->toArray();
+        foreach ($manageOpenid as $manage) {
+            $user_openid = $manage->openid;
+            $template_id = "a3Chfg3G2VYYlxqR8TM9bMQbx5cACeyI4RHsMlsnGpk";
+            $first = "您有新的订单";
+            $keyword1 = $orderSort;
+            $keyword2 = $order->date;
+            $remark = "请尽快处理!";
+            $url = "http://wl.miyacloud.cn/manage/login/auth2";
 
-        $data = array(
-            'touser' => $user_openid,
-            'template_id'=> $template_id,
-            'url'=> $url,
-            'data'=> array(
-                'first' => array(
-                    'value' => $first,
-                    'color' => "#173177"
-                ),
-                'keyword1' => array(
-                    'value' => $keyword1,
-                    'color' => "#173177"
-                ),
-                'keyword2' => array(
-                    'value' => $keyword2,
-                    'color' => "#173177"
-                ),
-                'remark' => array(
-                    'value' => $remark,
-                    'color' => "#173177"
+            $data = array(
+                'touser' => $user_openid,
+                'template_id'=> $template_id,
+                'url'=> $url,
+                'data'=> array(
+                    'first' => array(
+                        'value' => $first,
+                        'color' => "#173177"
+                    ),
+                    'keyword1' => array(
+                        'value' => $keyword1,
+                        'color' => "#173177"
+                    ),
+                    'keyword2' => array(
+                        'value' => $keyword2,
+                        'color' => "#173177"
+                    ),
+                    'remark' => array(
+                        'value' => $remark,
+                        'color' => "#173177"
+                    )
                 )
-            )
-        );
-        $data = json_encode($data);
-//        $weChat = new WechatController();
-//
-//        $res = $weChat->send_message($data);
+            );
+            $data = json_encode($data);
+            
+            $weChat = new WechatController();
+            $res = $weChat->send_message($data);
+        } 
     }
 
 }

@@ -1,0 +1,95 @@
+.Worklist_wrap {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    background-color: #eee;
+    font-size: 14px;
+}
+
+.workList_menu {
+    width: 100%;
+    height: 60px;
+    line-height: 40px;
+    position: fixed;
+    top: 0;
+    z-index: 200;
+    background-color: #eee;
+}
+
+.workList_menu ul {
+    width: 75%;
+    height: 40px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.workList_menu ul li {
+    width: 50%;
+    position: relative;
+    float: left;
+    color: #336699;
+    text-align: center;
+}
+
+.workList_menu ul li.liActive {
+    background-color: #369;
+    color: #fff;
+}
+
+.workList_Con {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    padding: 60px 0 10px;
+    box-sizing: border-box;
+}
+
+.workList_Con ul {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+.workList_Con ul li {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    overflow: auto;
+}
+
+.con_Active {
+    display: none;
+}
+
+.listLi {
+    width: 96%;
+    height: 120px;
+    position: relative;
+    margin: 10px auto 0;
+    background-color: #fff;
+    border-radius: 5px;
+    padding: 0 5px;
+    box-sizing: border-box;
+    line-height: 30px;
+}
+
+.listLi>div {
+    width: 100%;
+    height: 30px;
+    position: relative;
+    padding: 0 5px;
+    box-sizing: border-box;
+}
+
+.listTop {
+    border-bottom: 1px solid #eee;
+    color: #999;
+}

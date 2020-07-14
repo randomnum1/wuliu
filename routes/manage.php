@@ -10,7 +10,7 @@ Route::group(['prefix' => 'manage'], function (){
     //登录
     Route::get('/check', '\App\Manage\Controllers\LoginController@check');
     Route::post('/login', '\App\Manage\Controllers\LoginController@login');
-
+    Route::get('/login/auth2', '\App\Manage\Controllers\LoginController@auth2');
 
     Route::group(['middleware' => 'manage'],function(){
 

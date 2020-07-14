@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <!--主要I是强制让文档的宽度与设备宽度保持1:1，最大宽度1.0，禁止屏幕缩放。-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+    <!--这个也是iphone私有标签，允许全屏浏览。-->
+    <meta content="yes" name="apple-mobile-web-app-capable">
+    <!--iphone的私有标签，iphone顶端状态条的样式。-->
+    <meta content="black" name="apple-mobile-web-app-status-bar-style">
+    <!--禁止数字自动识别为电话号码，这个比较有用，因为一串数字在iphone上会显示成蓝色，样式加成别的颜色也是不生效的。-->
+    <meta content="telephone=no" name="format-detection">
+    <!--禁止email识别-->
+    <meta content="email=no" name="format-detection">
+    <title>商城</title>
+    <!-- 引入vue，axios -->
+    <script src="./static/node_modules/axios/dist/axios.js"></script>
+    <script src="./static/node_modules/vue/dist/vue.js"></script>
+    <script src="./static/js/public.js"></script>
+    <link rel="stylesheet" href="./static/css/normalize.css">
+    <link rel="stylesheet" href="./static/font/iconfont.css">
+    <link rel="stylesheet" href="./static/css/public.css">
+    <link rel="stylesheet" href="./static/css/shoppingMall.css">
+</head>
+
+<body>
+    <div class="shoppingMall_wrap" id="shoppingMall_wrap">
+        <div class="billSearch">
+            <div class="searchInput"><span class="iconfont icon-chaxun"></span><input type="text"></div>
+            <div class="searchBtn">搜索</div>
+        </div>
+        <div class="shoppingMall_Con">
+            <div class="Con_left w25">
+                <ul>
+                    <li @click="liNum = it.id" :class="{liActive:liNum == it.id}" v-for="(it,i) in shopTitle">{{it.name}}</li>
+                    <!-- <li @click="liNum = 0" :class="{liActive:liNum == 0}">奶粉</li>
+                    <li @click="liNum = 1" :class="{liActive:liNum == 1}">箱子</li>
+                    <li @click="liNum = 2" :class="{liActive:liNum == 2}">物料</li>
+                    <li @click="liNum = 3" :class="{liActive:liNum == 3}">其他</li> -->
+                </ul>
+            </div>
+            <div class="Con_right w75">
+                <ul>
+                    <li v-for="(shopType,index) in shopSort">
+                        <div v-if="liNum == shopType.id">
+                            <div class="shopsLi" v-for="(item,key) in shopType.goods" :key="item.id">
+                                <div class="liImg"><img :src="item.picture" alt="暂无"></div>
+                                <div class="li_right">
+                                    <div class="shopTitle multiLine2">{{item.name}}</div>
+                                    <div class="shopTitle">￥{{item.price}}/{{item.unit}}</div>
+                                    <div class="liBtn active br5">选规格</div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="shopCartBtn addBtn" @click="goShoppingCart">进入购物车</div>
+        </div>
+
+    </div>
+    <script>
+        var vm = new Vue({
+            el: '#shoppingMall_wrap',
+            data: {
+                num: 0,
+                expressListMenuNum: 0,
+                liNum: 0,
+                urls: {
+                    shoppingCartUrl: "/goods"
+                },
+                shopTitle: [],
+                shops: {},
+                shopSort: []
+            },
+            computed: {
+
+            },
+            created: async function() {
+                this.urls = await getPublicUrl(this.urls);
+                this.getShopData();
+            },
+            mounted: async function() {
+                var obj = await getSearch();
+                if (obj.num) {
+                    this.num = obj.num;
+                }
+                if (obj.expressListMenuNum) {
+                    this.expressListMenuNum = obj.expressListMenuNum;
+                }
+            },
+            methods: {
+                goShoppingCart() {
+                    window.location.href = 'shoppingCart.html'
+                },
+                getShopData() {
+                    var _this = this;
+                    axios({
+                            method: 'get',
+                            url: _this.urls.shoppingCartUrl,
+                            withCredentials: true,
+                            data: {}
+                        })
+                        .then(res => {
+                            if (res.status == 200) {
+                                _this.shopSort = res.data.sort;
+                                res.data.sort.forEach(el => {
+                                    var obj = {};
+                                    obj.name = el.name;
+                                    obj.id = el.id;
+                                    _this.shopTitle.push(obj);
+                                });
+                                _this.liNum = _this.shopSort[0].id;
+
+                            }
+                        })
+                        .catch(function(error) {
+                            // handle error
+                            if (error.response.status == 422) {
+                                // console.log("用户名或者密码错误！");
+                                alert("参数错误")
+                            }
+                            if (err.response.status == 400) {
+                                alert("登录过期请重新登录");
+                                // window.location.href = 'login.html'
+                            }
+                        })
+                        // axios.post("http://10.102.10.33:8002/deposit/shopData", {})
+                        //     .then(res => {
+                        //         console.log(res)
+                        //         _this.shops = res.data.shop;
+                        //     })
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>

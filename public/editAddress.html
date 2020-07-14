@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <!--主要I是强制让文档的宽度与设备宽度保持1:1，最大宽度1.0，禁止屏幕缩放。-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+    <!--这个也是iphone私有标签，允许全屏浏览。-->
+    <meta content="yes" name="apple-mobile-web-app-capable">
+    <!--iphone的私有标签，iphone顶端状态条的样式。-->
+    <meta content="black" name="apple-mobile-web-app-status-bar-style">
+    <!--禁止数字自动识别为电话号码，这个比较有用，因为一串数字在iphone上会显示成蓝色，样式加成别的颜色也是不生效的。-->
+    <meta content="telephone=no" name="format-detection">
+    <!--禁止email识别-->
+    <meta content="email=no" name="format-detection">
+    <title>编辑地址</title>
+    <!-- 引入vue，axios -->
+    <script src="./static/node_modules/axios/dist/axios.js"></script>
+    <script src="./static/node_modules/vue/dist/vue.js"></script>
+    <script src="./static/js/public.js"></script>
+    <link rel="stylesheet" href="./static/css/normalize.css">
+    <link rel="stylesheet" href="./static/font/iconfont.css">
+    <link rel="stylesheet" href="./static/css/public.css">
+    <link rel="stylesheet" href="./static/css/editAddress.css">
+
+</head>
+
+<body>
+    <div class="editAddress_wrap" id="editAddress_wrap">
+        <div class="content">
+            <div class="addressInfo">
+                <div class="textItem">
+                    <div style="color: #f00;">*</div>
+                    <div class="textLabel">所在地区</div>
+                    <div>:</div>
+                    <div class="textContent" @click="boxChange('area')">{{addressInfo.country}} <span class="iconfont icon-arrow rightIcon"></span></div>
+                </div>
+                <div class="textItem">
+                    <div style="color: #f00;">*</div>
+                    <div class="textLabel">英文名</div>
+                    <div>:</div>
+                    <div class="textContent"><input class="oneLine" type="text" v-model="addressInfo.en_name"> <span class="iconfont icon-beizhu1 rightIcon" @click="switchObj.helpSwitch=true"></span></div>
+                </div>
+                <div class="textItem">
+                    <div style="color: #f00;">*</div>
+                    <div class="textLabel">中文名</div>
+                    <div>:</div>
+                    <div class="textContent"><input class="oneLine" type="text" v-model="addressInfo.cn_name"></div>
+                </div>
+                <div class="textItem">
+                    <div style="color: #f00;">*</div>
+                    <div class="textLabel">电话</div>
+                    <div>:</div>
+                    <div class="textContent"><input class="oneLine" type="number" v-model="addressInfo.phone"></div>
+                </div>
+                <div class="textItem">
+                    <div style="color: #f00;">*</div>
+                    <div class="textLabel">邮箱</div>
+                    <div>:</div>
+                    <div class="textContent"><input class="oneLine" type="text" v-model="addressInfo.email"></div>
+                </div>
+                <div class="textItem">
+                    <div style="color: #f00;">*</div>
+                    <div class="textLabel">城市/区域</div>
+                    <div>:</div>
+                    <div class="textContent" @click="boxChange('city')">
+                        <!-- <input class="oneLine" type="text" readonly v-model="addressInfo.city" placeholder="请选择所在城市"> -->
+                        <span style="display: inline-block;padding-left: 5px;box-sizing: border-box;" v-if="addressInfo.province != ''">{{addressInfo.province}}{{addressInfo.city}}{{addressInfo.area}}</span>
+                        <span style="display: inline-block;padding-left: 5px;box-sizing: border-box;color: #666;" v-if="addressInfo.province == ''">请输入所在城市/区</span>
+                        <span class="iconfont icon-youjiantou rightIcon"></span>
+                    </div>
+                </div>
+                <div class="textareaItem">
+                    <div style="color: #f00;">*</div>
+                    <div class="textLabel">详细地址</div>
+                    <div>:</div>
+                    <div class="textContent"><textarea type="text" v-model="addressInfo.detail" placeholder="请填写详细地址"></textarea></div>
+                </div>
+                <div class="textItem">
+                    <div style="color: #f00;">*</div>
+                    <div class="textLabel">邮编</div>
+                    <div>:</div>
+                    <div class="textContent"><input class="oneLine" type="text" v-model="addressInfo.postcode" placeholder="请填写当地邮编"></div>
+                </div>
+            </div>
+            <div class="defaultOperation" @click="addressInfo.state == '0' ?  addressInfo.state = '1' : addressInfo.state = '0'"><span class="iconfont icon-wancheng1" :class="{active:addressInfo.state == '1'}"></span>设为默认地址</div>
+        </div>
+        <div class="addBtn" @click="submit" v-show="isOriginHei">确定</div>
+        <!-- 消息提示弹框 -->
+        <div class="messageBox" v-if="switchObj.helpSwitch">
+            <div class="boxContent">
+                <div class="messageTitle">提示</div>
+                <div class="messageContent">{{message}}</div>
+                <div style="width: 100%;line-height: 40px;text-align: center;font-weight: 700;color: #CC3300;position: fixed;bottom: 0;" @click="switchObj.helpSwitch=false">我知道了</div>
+            </div>
+        </div>
+        <!-- 弹框 -->
+        <div class="editAddr_messageBox" v-if="switchObj.messageSwitch">
+            <div class="areaBox" v-if="switchObj.areaBox">
+                <ul>
+                    <li v-for="(item,index) in areaList" @click="areaChecked(index)">{{item.name}} <span class="iconfont rightIcon" :class="{'icon-duihao1':item.checked}" style="color: #CC3300;"></span></li>
+                </ul>
+            </div>
+
+            <div class="cityBox" v-if="switchObj.cityBox">
+                <div class="cityBox_header">
+                    <div style="width: 50%;line-height: 30px;padding-left: 20px;float: left;position: relative;">城市地区</div>
+                    <span class="iconfont icon-close rightIcon" @click="switchObj.messageSwitch=false;switchObj.cityBox=false"></span>
+                </div>
+                <div class="cityBox_Con" v-if="cityShow">
+                    <div class="cityList">
+                        <div class="cityList_title">省份</div>
+                        <ul id="province">
+                            <li>请选择</li>
+                            <li v-for="(item,index) in cityAllCode" @click="checkedCity('province',item,index)">{{item.name}}</li>
+
+                        </ul>
+                    </div>
+                    <div class="cityList">
+                        <div class="cityList_title">城市</div>
+                        <ul id="city">
+                            <li v-if="cityCode.length == 0">请选择</li>
+                            <li v-for="(item,index) in cityCode" @click="checkedCity('city',item,index)">{{item.name}}</li>
+                            <li v-for="(item,index) in 9"> &nbsp;</li>
+                        </ul>
+                    </div>
+                    <div class="cityList">
+                        <div class="cityList_title">区县</div>
+                        <ul id="district">
+                            <li v-if="districtCode.length == 0">请选择</li>
+                            <li v-for="(item,index) in districtCode" @click="checkedCity('district',item,index)">{{item.name}}</li>
+                            <li v-for="(item,index) in 9"> &nbsp;</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="cityBox_Con" v-if="!cityShow">
+                    <textarea class="en_addr" v-model="addressInfo.province" placeholder="请填写所在城市/区"></textarea>
+                </div>
+                <div class="addBtn" v-show="isOriginHei" @click="submitCity">确定</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // cityCodeUrl = 'http://10.102.10.33:8002/other/cityCode';
+        var vm = new Vue({
+            el: "#editAddress_wrap",
+            data: {
+                editState: "", //地址编辑状态【新增，修改】
+                searchObj: {}, //地址栏参数
+                switchObj: {
+                    messageSwitch: false, //弹框开关
+                    areaBox: false, //地区弹框
+                    helpSwitch: false, //提示消息弹框
+                    cityBox: false
+                },
+                message: "英文名要求",
+                cityShow: false,
+                areaList: [{ //所在区域配置【若默认值为某一地区，初始化时进行设置】
+                    name: "英国",
+                    checked: false
+                }, {
+                    name: "中国",
+                    checked: false
+                }, {
+                    name: "港澳台地区",
+                    checked: false
+                }],
+                addressInfo: {
+                    area: "",
+                    city: "",
+                    cn_name: "",
+                    country: "请选择所在地区",
+                    detail: "",
+                    email: "",
+                    en_name: "",
+                    phone: "",
+                    postcode: "",
+                    province: "",
+                    state: "0",
+                },
+                cityAllCode: [],
+                cityCode: [],
+                districtCode: [],
+                city: {
+                    province: "",
+                    urban: "",
+                    district: ""
+                },
+                urls: {
+                    cityCodeUrl: "/address/china",
+                    detailUrl: "/address/show",
+                    addAddrUrl: "/address/create",
+                    updateAddrUrl: "/address/update",
+
+                },
+                screenHeight: document.body.clientHeight, // 这里是给到了一个默认值 （这个很重要），
+                originHeight: document.body.clientHeight, //默认高度在watch里拿来做比较
+                isOriginHei: true,
+
+            },
+            created: async function() {
+                var _this = this;
+                _this.urls = await getPublicUrl(_this.urls);
+                _this.searchObj = await getSearch();
+                if (_this.searchObj.type == 'edit') {
+                    _this.getAddrData()
+                }
+                // 获取省市区
+                axios({
+                        method: 'get',
+                        url: _this.urls.cityCodeUrl,
+                        withCredentials: true
+                    })
+                    .then(res => {
+                        if (res.status == 200) {
+                            _this.cityAllCode = res.data;
+                        }
+                    })
+                    .catch(function(error) {
+                        // handle error
+                        if (error.response.status == 422) {
+                            // console.log("用户名或者密码错误！");
+                            alert("参数错误")
+                        }
+                        if (err.response.status == 400) {
+                            alert("登录过期请重新登录")
+                            window.location.href = 'login.html'
+                        }
+                    })
+
+            },
+            mounted() {
+                const that = this
+                window.onresize = () => {
+                    return (() => {
+                        window.screenHeight = document.body.clientHeight
+                        that.screenHeight = window.screenHeight
+                    })()
+                }
+            },
+            watch: {
+                'addressInfo.country': {
+                    handler: function() {
+                        if (this.addressInfo.country == '中国') {
+                            this.cityShow = true;
+                        } else {
+                            this.cityShow = false;
+                        }
+                    },
+                },
+                screenHeight(val) {
+                    console.log(this.screenHeight)
+                    if (this.originHeight != val) {
+                        this.isOriginHei = false;
+                    } else {
+                        this.isOriginHei = true;
+                    }
+                }
+            },
+            methods: {
+                getAddrData() {
+                    var _this = this;
+                    axios({
+                            method: 'post',
+                            url: _this.urls.detailUrl,
+                            withCredentials: true,
+                            data: {
+                                id: Number(_this.searchObj.id)
+                            }
+                        })
+                        .then(res => {
+                            console.log(res);
+
+                            if (res.status == 200) {
+                                _this.addressInfo = res.data[0];
+                            }
+                        })
+                        .catch(function(error) {
+                            // handle error
+                            if (error.response.status == 422) {
+                                // console.log("用户名或者密码错误！");
+                                alert("参数错误")
+                            }
+                            if (err.response.status == 400) {
+                                alert("登录过期请重新登录")
+                                window.location.href = 'login.html'
+                            }
+                        })
+                },
+                boxChange(type) { //弹框设置
+                    this.switchObj.messageSwitch = true;
+                    if (type == 'area') {
+                        this.switchObj.areaBox = true;
+                    }
+                    if (type == 'city') {
+                        this.switchObj.cityBox = true;
+                    }
+                },
+                areaChecked(index) { //所在区域选择
+                    this.areaList.forEach(element => {
+                        element.checked = false;
+                    });
+                    this.areaList[index].checked = true;
+                    this.switchObj.messageSwitch = false;
+                    if (this.addressInfo.country != this.areaList[index].name) {
+                        this.addressInfo.province = '';
+                        this.addressInfo.city = '';
+                        this.addressInfo.area = '';
+                        this.addressInfo.detail = '';
+                    }
+                    this.addressInfo.country = this.areaList[index].name;
+                },
+                checkedCity(type, item, index) {
+                    // if (this.city.province != "" && this.city.urban != "" && this.city.district != "") {
+
+                    // }
+                    if (type == 'province') {
+                        var ul = document.getElementById('province');
+                        var ul1 = document.getElementById('city');
+                        ul.scrollTop = 30 * (index + 1);
+                        var lis = ul.children;
+                        var lis1 = ul1.children;
+                        for (let i = 0; i < lis.length; i++) {
+                            lis[i].style.color = '#bbb';
+                        }
+                        for (let i = 0; i < lis1.length; i++) {
+                            lis1[i].style.color = '#bbb';
+                        }
+                        lis[index + 1].style.color = '#c30';
+                        this.addressInfo.area = "";
+                        this.addressInfo.city = "";
+                        this.cityCode = [];
+                        this.districtCode = [];
+                        this.cityCode = item.cityList;
+                        this.addressInfo.province = item.name;
+                    }
+                    if (type == 'city') {
+                        var ul = document.getElementById('city');
+                        var ul1 = document.getElementById('district');
+                        ul.scrollTop = 30 * index;
+                        var lis = ul.children;
+                        var lis1 = ul1.children;
+                        for (let i = 0; i < lis.length; i++) {
+                            lis[i].style.color = '#bbb';
+                        }
+                        for (let i = 0; i < lis1.length; i++) {
+                            lis1[i].style.color = '#bbb';
+                        }
+                        lis[index].style.color = '#c30';
+                        this.districtCode = [];
+                        this.addressInfo.area = "";
+                        this.districtCode = item.areaList;
+                        if (item.name == '市辖区') {
+                            this.addressInfo.city = " ";
+                        } else {
+                            this.addressInfo.city = item.name;
+                        }
+                    }
+                    if (type == 'district') {
+                        var ul = document.getElementById('district');
+                        ul.scrollTop = 30 * index;
+                        var lis = ul.children;
+                        for (let i = 0; i < lis.length; i++) {
+                            lis[i].style.color = '#bbb';
+                        }
+                        lis[index].style.color = '#c30';
+                        this.addressInfo.area = item.name;
+                    }
+                },
+                submitCity() {
+                    if (this.addressInfo.country == '中国') {
+                        if (this.addressInfo.province == "") {
+                            alert("请选择所在省份");
+                            return;
+                        }
+                        if (this.addressInfo.city == "") {
+                            alert("请选择所在城市");
+                            return;
+                        }
+                        if (this.addressInfo.area == "") {
+                            alert("请选择所在县区");
+                            return;
+                        }
+                    } else {
+                        if (this.addressInfo.province == "") {
+                            alert("请选择所在城市/区");
+                            return;
+                        }
+                        this.addressInfo.city = "";
+                        this.addressInfo.area = "";
+                    }
+                    this.switchObj.cityBox = false;
+                    this.switchObj.messageSwitch = false;
+                },
+                submit() {
+                    var _this = this;
+                    if (_this.searchObj.type == 'edit') {
+                        axios({
+                                method: 'post',
+                                url: _this.urls.updateAddrUrl,
+                                withCredentials: true,
+                                data: _this.addressInfo
+                            })
+                            .then(res => {
+                                if (res.status == 200) {
+                                    alert('修改地址成功')
+                                    window.history.go(-1);
+                                    // window.location.href = 'addressList.html'
+                                }
+                            })
+                            .catch(function(error) {
+                                // handle error
+                                if (error.response.status == 422) {
+                                    // console.log("用户名或者密码错误！");
+                                    alert("参数错误")
+                                }
+                                if (err.response.status == 400) {
+                                    alert("登录过期请重新登录")
+                                    window.location.href = 'login.html'
+                                }
+                            })
+                    }
+                    if (_this.searchObj.type == 'add') {
+                        axios({
+                                method: 'post',
+                                url: _this.urls.addAddrUrl,
+                                withCredentials: true,
+                                data: _this.addressInfo
+                            })
+                            .then(res => {
+                                console.log(res);
+                                if (res.status == 200) {
+                                    window.history.go(-1);
+                                    // window.location.href = 'addressList.html'
+                                }
+                            })
+                            .catch(function(error) {
+                                // handle error
+                                if (error.response.status == 422) {
+                                    // console.log("用户名或者密码错误！");
+                                    alert("参数错误")
+                                }
+                                if (err.response.status == 400) {
+                                    alert("登录过期请重新登录")
+                                    window.location.href = 'login.html'
+                                }
+                            })
+                    }
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>

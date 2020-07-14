@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <!--主要I是强制让文档的宽度与设备宽度保持1:1，最大宽度1.0，禁止屏幕缩放。-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+    <!--这个也是iphone私有标签，允许全屏浏览。-->
+    <meta content="yes" name="apple-mobile-web-app-capable">
+    <!--iphone的私有标签，iphone顶端状态条的样式。-->
+    <meta content="black" name="apple-mobile-web-app-status-bar-style">
+    <!--禁止数字自动识别为电话号码，这个比较有用，因为一串数字在iphone上会显示成蓝色，样式加成别的颜色也是不生效的。-->
+    <meta content="telephone=no" name="format-detection">
+    <!--禁止email识别-->
+    <meta content="email=no" name="format-detection">
+    <title>地址列表</title>
+    <!-- 引入vue，axios -->
+    <script src="./static/node_modules/axios/dist/axios.js"></script>
+    <script src="./static/node_modules/vue/dist/vue.js"></script>
+    <script src="./static/js/public.js"></script>
+    <link rel="stylesheet" href="./static/css/normalize.css">
+    <link rel="stylesheet" href="./static/font/iconfont.css">
+    <link rel="stylesheet" href="./static/css/public.css">
+    <link rel="stylesheet" href="./static/css/addressList.css">
+</head>
+
+<body>
+    <div class="addressList_wrap" id="addressList_wrap">
+        <div class="listContent">
+            <div class="listItem" v-if="addressList.length > 0" v-for="(address,key) in addressList" :key="key">
+                <div class="userInfo" @click="checkAddr(address,key)">
+                    <div class="username oneLine">{{address.cn_name}}</div>
+                    <div class="userPhone oneLine">{{address.phone}}</div>
+                    <div class="userAddress">{{address.country}}{{address.province}}{{address.city}}{{address.area}}{{address.detail}}</div>
+                    <div class="postalCode oneLine">{{address.postcode}}</div>
+                    <div class="mailBox oneLine">{{address.email}}</div>
+                </div>
+                <div class="operationArea">
+                    <div class="defaultOperation" @click="defaultAddress('default',address)"><span class="iconfont" :class="{active:address.state == '1','icon-wancheng1':address.state == '1',defaultIcon:address.state == '0'}"></span>设为默认地址</div>
+                    <div class="functionBtn">
+                        <div class="editBtn" @click="addAddress('edit',address)"><span class="iconfont icon-bianji1"></span>编辑</div>
+                        <div class="deleteBtn" @click="deleteAddress('delete',address)"><span class="iconfont icon-shanchu1"></span>删除</div>
+                    </div>
+                </div>
+            </div>
+            <div v-if="addressList.length == 0" style="width: 100%;font-size:20px;text-align: center;color: #ccc;position: relative;top: 30%;transform: translateY(-50%);">
+                <div class="iconfont icon-zanwudizhi" style="font-size: 40px;"></div>
+                <div>暂无地址</div>
+            </div>
+        </div>
+
+
+        <!-- 弹框 -->
+        <div class="messageBox" v-if="messageSwitch">
+            <div class="boxContent">
+                <div class="messageTitle">{{message.title}}</div>
+                <div class="messageContent">{{message.content}}</div>
+                <div class="messageBtn">
+                    <div class="cancleBtn" @click="messageSwitch = false">取消</div>
+                    <div class="confirmBtn" @click="confirmOperation">确定</div>
+                </div>
+            </div>
+        </div>
+        <div class="addBtn" @click="addAddress('add')">新增地址</div>
+    </div>
+
+    <script>
+        var vm = new Vue({
+            el: "#addressList_wrap",
+            data: {
+                addressList: [],
+                checkId: 0,
+                message: {
+                    title: "提示",
+                    content: "确定执行该操作么？",
+                    type: ""
+                },
+                messageSwitch: false,
+                urls: {
+                    addrListUrl: "/address",
+                    defaultAddrUrl: "/address/setting",
+                    deleteAddrUrl: "/address/delete"
+                }
+            },
+            created: async function() {
+                var _this = this;
+                judgeEquipment();
+                console.log(123);
+                _this.urls = await getPublicUrl(_this.urls);
+                _this.searchObj = await getSearch();
+                _this.getAddrData();
+            },
+            mounted() {},
+            methods: {
+                deleteAddress(type, item) {
+                    this.message.content = "确认删除该地址吗？";
+                    this.message.type = type;
+                    this.messageSwitch = true;
+                    this.checkId = item.id;
+                },
+                defaultAddress(type, item) {
+                    if (item.state == '0') {
+                        this.message.content = "确认将该地址设置为默认地址吗？";
+                        this.message.type = type;
+                        this.messageSwitch = true;
+                        this.checkId = item.id;
+
+                    }
+                },
+                confirmOperation() {
+                    var _this = this;
+                    console.log(_this.message.type);
+
+                    if (_this.message.type == 'delete') {
+                        // 删除地址
+                        axios({
+                                method: 'post',
+                                url: _this.urls.deleteAddrUrl,
+                                withCredentials: true,
+                                data: {
+                                    id: _this.checkId
+                                }
+                            })
+                            .then(res => {
+                                if (res.status == 200) {
+                                    alert('删除成功')
+                                    _this.messageSwitch = false;
+                                    _this.getAddrData();
+                                }
+                            })
+                            .catch(function(error) {
+                                // handle error
+                                if (error.response.status == 422) {
+                                    // console.log("用户名或者密码错误！");
+                                    alert("参数错误")
+                                }
+                                if (err.response.status == 400) {
+                                    alert("登录过期请重新登录")
+                                    window.location.href = 'login.html'
+                                }
+                            })
+
+                    } else if (_this.message.type == 'default') {
+                        // 设置默认地址
+                        axios({
+                                method: 'post',
+                                url: _this.urls.defaultAddrUrl,
+                                withCredentials: true,
+                                data: {
+                                    id: _this.checkId
+                                }
+                            })
+                            .then(res => {
+                                if (res.status == 200) {
+                                    _this.messageSwitch = false;
+                                    _this.getAddrData();
+                                }
+                            })
+                            .catch(function(error) {
+                                // handle error
+                                if (error.response.status == 422) {
+                                    // console.log("用户名或者密码错误！");
+                                    alert("参数错误")
+                                }
+                                if (err.response.status == 400) {
+                                    alert("登录过期请重新登录")
+                                    window.location.href = 'login.html'
+                                }
+                            })
+                    }
+                },
+                addAddress(type, item) {
+                    if (type == 'add') {
+                        window.location.href = "editAddress.html?type=" + type;
+                    } else if (type == 'edit') {
+                        window.location.href = "editAddress.html?id=" + item.id + '&type=' + type;
+                    }
+                },
+                checkAddr(item, index) {
+                    var type = this.searchObj.state;
+                    console.log(type);
+                    window.localStorage.setItem(type, JSON.stringify(item));
+                    window.history.go(-1);
+
+                },
+                getAddrData() {
+                    var _this = this;
+                    axios({
+                            method: 'get',
+                            url: _this.urls.addrListUrl,
+                            withCredentials: true
+                        })
+                        .then(res => {
+                            if (res.status == 200) {
+                                _this.addressList = res.data;
+                            }
+                        })
+                        .catch(function(error) {
+                            // handle error
+                            if (error.response.status == 422) {
+                                // console.log("用户名或者密码错误！");
+                                alert("参数错误")
+                            }
+                            if (err.response.status == 400) {
+                                alert("登录过期请重新登录")
+                                window.location.href = 'login.html'
+                            }
+                        })
+                }
+
+            }
+        })
+    </script>
+</body>
+
+</html>

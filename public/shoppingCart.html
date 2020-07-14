@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <!--主要I是强制让文档的宽度与设备宽度保持1:1，最大宽度1.0，禁止屏幕缩放。-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+    <!--这个也是iphone私有标签，允许全屏浏览。-->
+    <meta content="yes" name="apple-mobile-web-app-capable">
+    <!--iphone的私有标签，iphone顶端状态条的样式。-->
+    <meta content="black" name="apple-mobile-web-app-status-bar-style">
+    <!--禁止数字自动识别为电话号码，这个比较有用，因为一串数字在iphone上会显示成蓝色，样式加成别的颜色也是不生效的。-->
+    <meta content="telephone=no" name="format-detection">
+    <!--禁止email识别-->
+    <meta content="email=no" name="format-detection">
+    <title>购物车</title>
+    <!-- 引入vue，axios -->
+    <script src="./static/node_modules/axios/dist/axios.js"></script>
+    <script src="./static/node_modules/vue/dist/vue.js"></script>
+    <script src="./static/js/public.js"></script>
+    <link rel="stylesheet" href="./static/css/normalize.css">
+    <link rel="stylesheet" href="./static/font/iconfont.css">
+    <link rel="stylesheet" href="./static/css/public.css">
+    <link rel="stylesheet" href="./static/css/shoppingCart.css">
+</head>
+
+<body>
+    <div class="shoppingCart_wrap" id="shoppingCart_wrap">
+        <div class="shoppingCart_title">
+            <div class="w50">购物车列表</div>
+            <div class="w50 tar"><span class="iconfont icon-shanchu"></span>清空</div>
+        </div>
+        <div class="shoppingCart_Con">
+            <ul>
+                <li v-for="(item,key) in shoppingCart" :key="key.id">
+                    <div class="liImg"><img :src="item.img" alt=""></div>
+                    <div class="li_right">
+                        <div class="shopTitle multiLine2">{{item.title}}</div>
+                        <div class="w100" style="margin-top: 20px;height: 30px;">
+                            <div class="w50" style="line-height: 30px;">￥{{item.price}}/{{item.per}}</div>
+                            <div class="w50" style="height: 30px;line-height: 30px;">
+                                <span class="iconfont icon-jianhao w33" style="font-size: 20px;height: 30px;" @click="shopNum('reduce',key)"></span>
+                                <input type="number" class="w33" placeholder="0" style="height: 30px;" v-model="item.num">
+                                <span class="iconfont  w33 icon-jiahao1" style="font-size: 20px;height: 30px;" @click="shopNum('plus',key)"></span>
+                            </div>
+                        </div>
+
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="shoppingCart_settlement">
+            <div class="w50 active">￥{{priceNum}}</div>
+            <div class="w30 tac" style="float: right;background-color: #c30;color: #fff;">结算</div>
+        </div>
+    </div>
+    <script>
+        var vm = new Vue({
+            el: '#shoppingCart_wrap',
+            data: {
+                priceNum: 0,
+                shoppingCart: [],
+                urls: {
+                    shoppingCartUrl: "/goods"
+                }
+            },
+            created: async function() {
+                this.urls = await getPublicUrl(this.urls);
+                this.getShopCartData();
+            },
+            mounted() {
+
+            },
+            watch: {
+                shoppingCart: {
+                    handler: function(val, oldval) {
+                        this.priceNum = 0;
+                        val.forEach(element => {
+                            this.priceNum += element.num * element.price
+                        });
+                    },
+                    deep: true //对象内部的属性监听，也叫深度监听
+                },
+            },
+            methods: {
+                shopNum(type, index) {
+                    if (type == 'reduce') {
+                        if (this.shoppingCart[index].num > 0) {
+                            this.shoppingCart[index].num--;
+                        } else {
+                            return
+                        }
+                    }
+                    if (type == 'plus') {
+                        this.shoppingCart[index].num++;
+                    }
+                },
+                getShopCartData() {
+                    var _this = this;
+                    axios.get("./static/json/shopCartData.json", {})
+                        .then(res => {
+                            _this.shoppingCart = res.data.shoppingCart;
+                        })
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>
